@@ -1,0 +1,1805 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "utmost",
+    "version": "last",
+    "description": "swap币币转换"
+  },
+  "basePath": "/",
+  "tags": [
+    { "name": "swap代币详情" },
+    { "name": "swap合约路由" },
+    { "name": "swap兑换", "description": null }
+  ],
+  "schemes": ["http"],
+  "paths": {
+    "/swap-tokens": {
+      "get": {
+        "tags": ["swap代币详情"],
+        "summary": "分页查询swap代币详情",
+        "description": "",
+        "consumes": ["application/json"],
+        "parameters": [
+          {
+            "name": "pageNo",
+            "in": "query",
+            "required": true,
+            "description": "页码\n从 1 开始\n不传默认为第一页",
+            "type": "string"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": true,
+            "description": "每页个数\n不传默认为 20\n最大为 1000",
+            "type": "string"
+          },
+          {
+            "name": "network",
+            "in": "query",
+            "required": true,
+            "description": "代币网络",
+            "type": "string"
+          },
+          {
+            "name": "condition",
+            "in": "query",
+            "required": false,
+            "description": "代币符号精准搜索，代币名称模糊搜索",
+            "type": "string"
+          },
+          {
+            "name": "userAddress",
+            "in": "query",
+            "required": false,
+            "description": "钱包地址，查询钱包余额",
+            "type": "string"
+          },
+          {
+            "name": "tokenType",
+            "in": "query",
+            "required": false,
+            "description": "0:代币,1:brc20,2:ferc20",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "description": "消息返回结构体",
+              "required": ["msg", "code", "data"],
+              "properties": {
+                "msg": {
+                  "type": "string",
+                  "description": "返回消息\n异常时返回错误信息",
+                  "mock": { "mock": "请求成功" }
+                },
+                "code": {
+                  "type": "string",
+                  "description": "返回码\n成功时返回 000 异常时返回码如 105.abm-svc.UNKNOWN",
+                  "mock": { "mock": "000" }
+                },
+                "data": {
+                  "type": "object",
+                  "description": "返回数据",
+                  "required": [
+                    "hasPrev",
+                    "pageNo",
+                    "totalPage",
+                    "pageSize",
+                    "hasNext",
+                    "totalCount",
+                    "items"
+                  ],
+                  "properties": {
+                    "hasPrev": {
+                      "type": "boolean",
+                      "description": "是否还有前一页",
+                      "mock": { "mock": "true" }
+                    },
+                    "pageNo": {
+                      "type": "integer",
+                      "description": "当前页码",
+                      "mock": { "mock": "1" }
+                    },
+                    "totalPage": {
+                      "type": "integer",
+                      "description": "总页数",
+                      "mock": { "mock": "5" }
+                    },
+                    "pageSize": {
+                      "type": "integer",
+                      "description": "每页个数",
+                      "mock": { "mock": "20" }
+                    },
+                    "hasNext": {
+                      "type": "boolean",
+                      "description": "是否还有后一页",
+                      "mock": { "mock": "false" }
+                    },
+                    "totalCount": {
+                      "type": "integer",
+                      "description": "总数",
+                      "mock": { "mock": "100" }
+                    },
+                    "items": {
+                      "type": "array",
+                      "description": "数据域",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "swapTokenContractAddress": {
+                            "type": "string",
+                            "description": "swap代币详情代币合约地址"
+                          },
+                          "swapTokenName": {
+                            "type": "string",
+                            "description": "swap代币详情名称"
+                          },
+                          "swapTokenSymbol": {
+                            "type": "string",
+                            "description": "swap代币详情代币符号"
+                          },
+                          "swapTokenNetwork": {
+                            "type": "string",
+                            "description": "swap代币详情代币网络"
+                          },
+                          "swapTokenID": {
+                            "type": "integer",
+                            "description": "swap代币详情ID"
+                          },
+                          "swapTokenIcon": {
+                            "type": "string",
+                            "description": "swap代币详情代币图标"
+                          },
+                          "swapTokenDecimals": {
+                            "type": "string",
+                            "description": "swap代币详情代币小数位"
+                          },
+                          "usdExchange": {
+                            "type": "number",
+                            "description": "swap代币兑换美元市值"
+                          },
+                          "legalTenderExchangeRatio": {
+                            "type": "object",
+                            "properties": {},
+                            "description": "swap代币法币汇率Map"
+                          },
+                          "balance": { "type": "string" },
+                          "isBrc20": { "type": "boolean" },
+                          "swapThirdPartySymbol": { "type": "string" }
+                        },
+                        "required": [
+                          "balance",
+                          "isBrc20",
+                          "swapThirdPartySymbol"
+                        ]
+                      },
+                      "uniqueItems": true,
+                      "minItems": 1,
+                      "maxItems": 3
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/swap-token": {
+      "post": {
+        "tags": ["swap代币详情"],
+        "summary": "创建swap代币详情",
+        "consumes": ["application/json"],
+        "parameters": [
+          {
+            "name": "root",
+            "in": "body",
+            "description": "请求参数",
+            "schema": {
+              "type": "object",
+              "description": "请求参数",
+              "required": [
+                "symbol",
+                "decimals",
+                "name",
+                "icon",
+                "contractAddress",
+                "network"
+              ],
+              "properties": {
+                "symbol": {
+                  "type": "string",
+                  "description": "代币符号",
+                  "mock": { "mock": "@string" }
+                },
+                "decimals": {
+                  "type": "string",
+                  "description": "代币小数位",
+                  "mock": { "mock": "@string" }
+                },
+                "name": {
+                  "type": "string",
+                  "description": "名称",
+                  "mock": { "mock": "@string" }
+                },
+                "icon": {
+                  "type": "string",
+                  "description": "代币图标",
+                  "mock": { "mock": "@string" }
+                },
+                "contractAddress": {
+                  "type": "string",
+                  "description": "代币合约地址",
+                  "mock": { "mock": "@string" }
+                },
+                "network": {
+                  "type": "string",
+                  "description": "代币网络",
+                  "mock": { "mock": "@string" }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "description": "消息返回结构体",
+              "required": ["msg", "code", "data"],
+              "properties": {
+                "msg": {
+                  "type": "string",
+                  "description": "返回消息\n异常时返回错误信息",
+                  "mock": { "mock": "请求成功" }
+                },
+                "code": {
+                  "type": "string",
+                  "description": "返回码\n成功时返回 000 异常时返回码如 105.abm-svc.UNKNOWN",
+                  "mock": { "mock": "000" }
+                },
+                "data": { "type": "object", "description": "返回数据" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["swap代币详情"],
+        "summary": "删除swap代币详情",
+        "consumes": ["application/json"],
+        "parameters": [
+          {
+            "name": "root",
+            "in": "body",
+            "description": "请求参数",
+            "schema": {
+              "type": "object",
+              "description": "请求参数",
+              "required": ["swapTokenID"],
+              "properties": {
+                "swapTokenID": {
+                  "type": "integer",
+                  "description": "swap代币详情ID",
+                  "mock": { "mock": "@integer" }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "description": "消息返回结构体",
+              "required": ["msg", "code", "data"],
+              "properties": {
+                "msg": {
+                  "type": "string",
+                  "description": "返回消息\n异常时返回错误信息",
+                  "mock": { "mock": "请求成功" }
+                },
+                "code": {
+                  "type": "string",
+                  "description": "返回码\n成功时返回 000 异常时返回码如 105.abm-svc.UNKNOWN",
+                  "mock": { "mock": "000" }
+                },
+                "data": { "type": "object", "description": "返回数据" }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["swap代币详情"],
+        "summary": "单记录查询swap代币详情",
+        "description": "",
+        "consumes": ["application/json"],
+        "parameters": [
+          {
+            "name": "swapTokenID",
+            "in": "query",
+            "required": true,
+            "description": "swap代币详情ID",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "description": "消息返回结构体",
+              "required": ["msg", "code", "data"],
+              "properties": {
+                "msg": {
+                  "type": "string",
+                  "description": "返回消息\n异常时返回错误信息",
+                  "mock": { "mock": "请求成功" }
+                },
+                "code": {
+                  "type": "string",
+                  "description": "返回码\n成功时返回 000 异常时返回码如 105.abm-svc.UNKNOWN",
+                  "mock": { "mock": "000" }
+                },
+                "data": {
+                  "type": "object",
+                  "description": "返回数据",
+                  "required": [
+                    "swapTokenContractAddress",
+                    "swapTokenName",
+                    "swapTokenSymbol",
+                    "swapTokenNetwork",
+                    "swapTokenID",
+                    "swapTokenIcon",
+                    "swapTokenDecimals",
+                    "swapTokenIsBrc20"
+                  ],
+                  "properties": {
+                    "swapTokenContractAddress": {
+                      "type": "string",
+                      "description": "swap代币详情代币合约地址"
+                    },
+                    "swapTokenName": {
+                      "type": "string",
+                      "description": "swap代币详情名称"
+                    },
+                    "swapTokenSymbol": {
+                      "type": "string",
+                      "description": "swap代币详情代币符号"
+                    },
+                    "swapTokenNetwork": {
+                      "type": "string",
+                      "description": "swap代币详情代币网络"
+                    },
+                    "swapTokenID": {
+                      "type": "integer",
+                      "description": "swap代币详情ID"
+                    },
+                    "swapTokenIcon": {
+                      "type": "string",
+                      "description": "swap代币详情代币图标"
+                    },
+                    "swapTokenDecimals": {
+                      "type": "string",
+                      "description": "swap代币详情代币小数位"
+                    },
+                    "swapTokenIsBrc20": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/router": {
+      "put": {
+        "tags": ["swap合约路由"],
+        "summary": "修改swap合约路由",
+        "consumes": ["application/json"],
+        "parameters": [
+          {
+            "name": "root",
+            "in": "body",
+            "description": "请求参数",
+            "schema": {
+              "type": "object",
+              "description": "请求参数",
+              "required": [
+                "apiUrl",
+                "routerID",
+                "name",
+                "contractAddress",
+                "aggregatorID",
+                "type",
+                "network"
+              ],
+              "properties": {
+                "apiUrl": {
+                  "type": "string",
+                  "description": "api地址",
+                  "mock": { "mock": "@string" }
+                },
+                "routerID": {
+                  "type": "integer",
+                  "description": "swap合约路由ID",
+                  "mock": { "mock": "@integer" }
+                },
+                "name": {
+                  "type": "string",
+                  "description": "名称",
+                  "mock": { "mock": "@string" }
+                },
+                "contractAddress": {
+                  "type": "string",
+                  "description": "代币合约地址",
+                  "mock": { "mock": "@string" }
+                },
+                "aggregatorID": {
+                  "type": "string",
+                  "description": "aggregatorID",
+                  "mock": { "mock": "@string" }
+                },
+                "type": {
+                  "type": "string",
+                  "description": "类型",
+                  "mock": { "mock": "@string" }
+                },
+                "network": {
+                  "type": "string",
+                  "description": "swap合约网络",
+                  "mock": { "mock": "@string" }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "description": "消息返回结构体",
+              "required": ["msg", "code", "data"],
+              "properties": {
+                "msg": {
+                  "type": "string",
+                  "description": "返回消息\n异常时返回错误信息",
+                  "mock": { "mock": "请求成功" }
+                },
+                "code": {
+                  "type": "string",
+                  "description": "返回码\n成功时返回 000 异常时返回码如 105.abm-svc.UNKNOWN",
+                  "mock": { "mock": "000" }
+                },
+                "data": { "type": "object", "description": "返回数据" }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["swap合约路由"],
+        "summary": "创建swap合约路由",
+        "consumes": ["application/json"],
+        "parameters": [
+          {
+            "name": "root",
+            "in": "body",
+            "description": "请求参数",
+            "schema": {
+              "type": "object",
+              "description": "请求参数",
+              "required": [
+                "apiUrl",
+                "name",
+                "contractAddress",
+                "aggregatorID",
+                "type",
+                "network"
+              ],
+              "properties": {
+                "apiUrl": {
+                  "type": "string",
+                  "description": "api地址",
+                  "mock": { "mock": "@string" }
+                },
+                "name": {
+                  "type": "string",
+                  "description": "名称",
+                  "mock": { "mock": "@string" }
+                },
+                "contractAddress": {
+                  "type": "string",
+                  "description": "代币合约地址",
+                  "mock": { "mock": "@string" }
+                },
+                "aggregatorID": {
+                  "type": "string",
+                  "description": "aggregatorID",
+                  "mock": { "mock": "@string" }
+                },
+                "type": {
+                  "type": "string",
+                  "description": "类型",
+                  "mock": { "mock": "@string" }
+                },
+                "network": {
+                  "type": "string",
+                  "description": "swap合约网络",
+                  "mock": { "mock": "@string" }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "description": "消息返回结构体",
+              "required": ["msg", "code", "data"],
+              "properties": {
+                "msg": {
+                  "type": "string",
+                  "description": "返回消息\n异常时返回错误信息",
+                  "mock": { "mock": "请求成功" }
+                },
+                "code": {
+                  "type": "string",
+                  "description": "返回码\n成功时返回 000 异常时返回码如 105.abm-svc.UNKNOWN",
+                  "mock": { "mock": "000" }
+                },
+                "data": { "type": "object", "description": "返回数据" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["swap合约路由"],
+        "summary": "删除swap合约路由",
+        "consumes": ["application/json"],
+        "parameters": [
+          {
+            "name": "root",
+            "in": "body",
+            "description": "请求参数",
+            "schema": {
+              "type": "object",
+              "description": "请求参数",
+              "required": ["routerID"],
+              "properties": {
+                "routerID": {
+                  "type": "integer",
+                  "description": "swap合约路由ID",
+                  "mock": { "mock": "@integer" }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "description": "消息返回结构体",
+              "required": ["msg", "code", "data"],
+              "properties": {
+                "msg": {
+                  "type": "string",
+                  "description": "返回消息\n异常时返回错误信息",
+                  "mock": { "mock": "请求成功" }
+                },
+                "code": {
+                  "type": "string",
+                  "description": "返回码\n成功时返回 000 异常时返回码如 105.abm-svc.UNKNOWN",
+                  "mock": { "mock": "000" }
+                },
+                "data": { "type": "object", "description": "返回数据" }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["swap合约路由"],
+        "summary": "单记录查询swap合约路由",
+        "consumes": ["application/json"],
+        "parameters": [
+          {
+            "name": "routerID",
+            "in": "query",
+            "required": true,
+            "description": "swap合约路由ID",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "description": "消息返回结构体",
+              "required": ["msg", "code", "data"],
+              "properties": {
+                "msg": {
+                  "type": "string",
+                  "description": "返回消息\n异常时返回错误信息",
+                  "mock": { "mock": "请求成功" }
+                },
+                "code": {
+                  "type": "string",
+                  "description": "返回码\n成功时返回 000 异常时返回码如 105.abm-svc.UNKNOWN",
+                  "mock": { "mock": "000" }
+                },
+                "data": {
+                  "type": "object",
+                  "description": "返回数据",
+                  "required": [
+                    "routerContractAddress",
+                    "routerName",
+                    "routerAggregatorID",
+                    "routerApiUrl",
+                    "routerID",
+                    "routerType",
+                    "routerNetwork"
+                  ],
+                  "properties": {
+                    "routerContractAddress": {
+                      "type": "string",
+                      "description": "swap合约路由代币合约地址"
+                    },
+                    "routerName": {
+                      "type": "string",
+                      "description": "swap合约路由名称"
+                    },
+                    "routerAggregatorID": {
+                      "type": "string",
+                      "description": "swap合约路由aggregatorID"
+                    },
+                    "routerApiUrl": {
+                      "type": "string",
+                      "description": "swap合约路由api地址"
+                    },
+                    "routerID": {
+                      "type": "integer",
+                      "description": "swap合约路由ID"
+                    },
+                    "routerType": {
+                      "type": "string",
+                      "description": "swap合约路由类型"
+                    },
+                    "routerNetwork": {
+                      "type": "string",
+                      "description": "swap合约路由swap合约网络"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/routers": {
+      "get": {
+        "tags": ["swap合约路由"],
+        "summary": "分页查询swap合约路由",
+        "description": "",
+        "consumes": ["application/json"],
+        "parameters": [
+          {
+            "name": "pageNo",
+            "in": "query",
+            "required": true,
+            "description": "页码\n从 1 开始\n不传默认为第一页",
+            "type": "string"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": true,
+            "description": "每页个数\n不传默认为 20\n最大为 1000",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "description": "消息返回结构体",
+              "required": ["msg", "code", "data"],
+              "properties": {
+                "msg": {
+                  "type": "string",
+                  "description": "返回消息\n异常时返回错误信息",
+                  "mock": { "mock": "请求成功" }
+                },
+                "code": {
+                  "type": "string",
+                  "description": "返回码\n成功时返回 000 异常时返回码如 105.abm-svc.UNKNOWN",
+                  "mock": { "mock": "000" }
+                },
+                "data": {
+                  "type": "object",
+                  "description": "返回数据",
+                  "required": [
+                    "hasPrev",
+                    "pageNo",
+                    "totalPage",
+                    "pageSize",
+                    "hasNext",
+                    "totalCount",
+                    "items"
+                  ],
+                  "properties": {
+                    "hasPrev": {
+                      "type": "boolean",
+                      "description": "是否还有前一页",
+                      "mock": { "mock": "true" }
+                    },
+                    "pageNo": {
+                      "type": "integer",
+                      "description": "当前页码",
+                      "mock": { "mock": "1" }
+                    },
+                    "totalPage": {
+                      "type": "integer",
+                      "description": "总页数",
+                      "mock": { "mock": "5" }
+                    },
+                    "pageSize": {
+                      "type": "integer",
+                      "description": "每页个数",
+                      "mock": { "mock": "20" }
+                    },
+                    "hasNext": {
+                      "type": "boolean",
+                      "description": "是否还有后一页",
+                      "mock": { "mock": "false" }
+                    },
+                    "totalCount": {
+                      "type": "integer",
+                      "description": "总数",
+                      "mock": { "mock": "100" }
+                    },
+                    "items": {
+                      "type": "array",
+                      "description": "数据域",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "routerContractAddress": {
+                            "type": "string",
+                            "description": "swap合约路由代币合约地址"
+                          },
+                          "routerName": {
+                            "type": "string",
+                            "description": "swap合约路由名称"
+                          },
+                          "routerAggregatorID": {
+                            "type": "string",
+                            "description": "swap合约路由aggregatorID"
+                          },
+                          "routerApiUrl": {
+                            "type": "string",
+                            "description": "swap合约路由api地址"
+                          },
+                          "routerID": {
+                            "type": "integer",
+                            "description": "swap合约路由ID"
+                          },
+                          "routerType": {
+                            "type": "string",
+                            "description": "swap合约路由类型"
+                          },
+                          "routerNetwork": {
+                            "type": "string",
+                            "description": "swap合约路由swap合约网络"
+                          }
+                        }
+                      },
+                      "uniqueItems": true,
+                      "minItems": 1,
+                      "maxItems": 3
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/swap:chain-details": {
+      "get": {
+        "tags": ["swap兑换"],
+        "summary": "chain details",
+        "description": "",
+        "consumes": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "description": "消息返回结构体",
+              "required": ["msg", "code", "data"],
+              "properties": {
+                "msg": {
+                  "type": "string",
+                  "description": "返回消息\n异常时返回错误信息",
+                  "mock": { "mock": "请求成功" }
+                },
+                "code": {
+                  "type": "string",
+                  "description": "返回码\n成功时返回 000 异常时返回码如 105.abm-svc.UNKNOWN",
+                  "mock": { "mock": "000" }
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "swapNetwork": { "type": "string" },
+                      "netWorkName": { "type": "string" },
+                      "chainID": { "type": "string" },
+                      "chainIcon": { "type": "string" },
+                      "isActive": { "type": "string" }
+                    },
+                    "required": [
+                      "swapNetwork",
+                      "isActive",
+                      "chainIcon",
+                      "chainID",
+                      "netWorkName"
+                    ]
+                  },
+                  "description": "返回数据"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/swap": {
+      "post": {
+        "tags": ["swap兑换"],
+        "summary": "swap兑换",
+        "description": "",
+        "consumes": ["application/json"],
+        "parameters": [
+          {
+            "name": "root",
+            "in": "body",
+            "schema": {
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "type": "object",
+              "properties": {
+                "from": { "type": "string" },
+                "to": { "type": "string" },
+                "value": { "type": "number" },
+                "hash": { "type": "string" },
+                "swapID": { "type": "string" }
+              },
+              "required": ["from", "to", "value", "hash", "swapID"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "type": "object",
+              "properties": {
+                "code": { "type": "number" },
+                "msg": { "type": "string" },
+                "data": { "type": "string", "description": "hash" }
+              },
+              "required": ["code", "msg", "data"]
+            }
+          }
+        }
+      }
+    },
+    "/swap-rebates": {
+      "get": {
+        "tags": ["swap兑换"],
+        "summary": "swap返佣记录",
+        "description": "",
+        "parameters": [
+          {
+            "name": "pageNo",
+            "in": "query",
+            "required": true,
+            "description": "用户钱包地址",
+            "type": "string"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": true,
+            "description": "",
+            "type": "string"
+          },
+          {
+            "name": "userAddress",
+            "in": "query",
+            "required": true,
+            "description": "",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "type": "object",
+              "properties": {
+                "msg": { "type": "string" },
+                "code": { "type": "string" },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "hasPrev": { "type": "boolean" },
+                    "pageNo": { "type": "number" },
+                    "totalPage": { "type": "number" },
+                    "pageSize": { "type": "number" },
+                    "hasNext": { "type": "boolean" },
+                    "totalCount": { "type": "number" },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "swapRecordSrcNetwork": { "type": "string" },
+                          "swapRecordDstNetwork": { "type": "string" },
+                          "swapRecordSrcTxHash": { "type": "string" },
+                          "swapRecordDstTxHash": { "type": "string" },
+                          "swapRecordTxStatus": { "type": "string" },
+                          "swapRecordUserAddress": { "type": "string" },
+                          "swapRecordID": { "type": "number" },
+                          "swapRecordSrcTokenSymbol": { "type": "string" },
+                          "swapRecordDstTokenSymbol": { "type": "string" },
+                          "swapRecordSrcAmount": { "type": "string" },
+                          "swapRecordDstAmount": { "type": "string" },
+                          "swapRecordSrcTxTime": { "type": "string" },
+                          "swapRecordDstTxTime": { "type": "string" },
+                          "swapRecordSrcTokenLogo": { "type": "string" },
+                          "swapRecordDstTokenLogo": { "type": "string" },
+                          "swapRecordSlippage": { "type": "string" },
+                          "swapRecordErrorMsg": { "type": "string" },
+                          "referralCode": {
+                            "type": "string",
+                            "description": "邀请码"
+                          },
+                          "feeAmount": {
+                            "type": "string",
+                            "description": "交易手续费"
+                          },
+                          "feeTokenAddress": {
+                            "type": "string",
+                            "description": "费用货币地址"
+                          },
+                          "feeTokenSymbol": {
+                            "type": "string",
+                            "description": "费用货币标志"
+                          },
+                          "feeTokenLogo": {
+                            "type": "string",
+                            "description": "费用货币Logo"
+                          },
+                          "score": { "type": "integer", "description": "积分" },
+                          "rebate": {
+                            "type": "number",
+                            "description": "返佣值"
+                          }
+                        },
+                        "required": [
+                          "swapRecordSrcNetwork",
+                          "swapRecordDstNetwork",
+                          "swapRecordSrcTxHash",
+                          "swapRecordDstTxHash",
+                          "swapRecordTxStatus",
+                          "swapRecordUserAddress",
+                          "swapRecordID",
+                          "swapRecordSrcTokenSymbol",
+                          "swapRecordDstTokenSymbol",
+                          "swapRecordSrcAmount",
+                          "swapRecordDstAmount",
+                          "swapRecordSrcTxTime",
+                          "swapRecordDstTxTime",
+                          "swapRecordSrcTokenLogo",
+                          "swapRecordDstTokenLogo",
+                          "swapRecordSlippage",
+                          "swapRecordErrorMsg",
+                          "referralCode",
+                          "feeAmount",
+                          "feeTokenAddress",
+                          "feeTokenSymbol",
+                          "feeTokenLogo",
+                          "score",
+                          "rebate"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "hasPrev",
+                    "totalPage",
+                    "pageNo",
+                    "pageSize",
+                    "hasNext",
+                    "totalCount",
+                    "items"
+                  ]
+                }
+              },
+              "required": ["data"]
+            }
+          }
+        }
+      }
+    },
+    "/swap:confirmcallback": {
+      "post": {
+        "tags": ["swap兑换"],
+        "summary": "交易上链后回执信息",
+        "description": "",
+        "consumes": ["application/json"],
+        "parameters": [
+          {
+            "name": "root",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "title": "title",
+              "properties": {
+                "srcNetwork": { "type": "string", "description": "源链" },
+                "hash": { "type": "string", "description": "交易hash" },
+                "confirmBusinId": {
+                  "type": "string",
+                  "description": "confirm传递过来的确认单编号"
+                }
+              },
+              "required": ["srcNetwork", "hash", "confirmBusinId"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "title": "title",
+              "properties": {
+                "code": { "type": "string" },
+                "msg": { "type": "string" },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "string", "description": "是否成功" },
+                    "error": { "type": "string", "description": "错误信息" }
+                  },
+                  "required": ["success", "error"]
+                },
+                "fail": { "type": "boolean", "description": "是否失败" }
+              },
+              "required": ["code", "msg", "data", "fail"]
+            }
+          }
+        }
+      }
+    },
+    "/swap-records": {
+      "get": {
+        "tags": ["swap兑换"],
+        "summary": "分页查询swap兑换记录",
+        "description": "",
+        "consumes": ["application/json"],
+        "parameters": [
+          {
+            "name": "pageNo",
+            "in": "query",
+            "required": false,
+            "description": "页码\n从 1 开始\n不传默认为第一页",
+            "type": "string"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "description": "每页个数\n不传默认为 20\n最大为 1000",
+            "type": "string"
+          },
+          {
+            "name": "userAddress",
+            "in": "query",
+            "required": true,
+            "description": "用户地址",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "type": "string"
+          },
+          {
+            "name": "network",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "type": "string"
+          },
+          {
+            "name": "hash",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "type": "object",
+              "properties": {
+                "msg": { "type": "string" },
+                "code": { "type": "string" },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "hasPrev": { "type": "boolean" },
+                    "pageNo": { "type": "number" },
+                    "totalPage": { "type": "number" },
+                    "pageSize": { "type": "number" },
+                    "hasNext": { "type": "boolean" },
+                    "totalCount": { "type": "number" },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "swapRecordSrcNetwork": { "type": "string" },
+                          "swapRecordDstNetwork": { "type": "string" },
+                          "swapRecordSrcTxHash": { "type": "string" },
+                          "swapRecordDstTxHash": { "type": "string" },
+                          "swapRecordTxStatus": { "type": "string" },
+                          "swapRecordUserAddress": { "type": "string" },
+                          "swapRecordID": { "type": "number" },
+                          "swapRecordSrcTokenSymbol": { "type": "string" },
+                          "swapRecordDstTokenSymbol": { "type": "string" },
+                          "swapRecordSrcAmount": { "type": "string" },
+                          "swapRecordDstAmount": { "type": "string" },
+                          "swapRecordSrcTxTime": { "type": "string" },
+                          "swapRecordDstTxTime": { "type": "string" },
+                          "swapRecordSrcTokenLogo": { "type": "string" },
+                          "swapRecordDstTokenLogo": { "type": "string" },
+                          "swapRecordSlippage": { "type": "string" },
+                          "swapRecordErrorMsg": { "type": "string" },
+                          "referralCode": {
+                            "type": "string",
+                            "description": "邀请码"
+                          },
+                          "feeAmount": {
+                            "type": "string",
+                            "description": "交易手续费"
+                          },
+                          "feeTokenAddress": {
+                            "type": "string",
+                            "description": "费用货币地址"
+                          },
+                          "feeTokenSymbol": {
+                            "type": "string",
+                            "description": "费用货币标志"
+                          },
+                          "feeTokenLogo": {
+                            "type": "string",
+                            "description": "费用货币Logo"
+                          },
+                          "score": { "type": "integer", "description": "积分" },
+                          "rebate": {
+                            "type": "number",
+                            "description": "返佣值"
+                          }
+                        },
+                        "required": [
+                          "swapRecordSrcNetwork",
+                          "swapRecordDstNetwork",
+                          "swapRecordSrcTxHash",
+                          "swapRecordDstTxHash",
+                          "swapRecordTxStatus",
+                          "swapRecordUserAddress",
+                          "swapRecordID",
+                          "swapRecordSrcTokenSymbol",
+                          "swapRecordDstTokenSymbol",
+                          "swapRecordSrcAmount",
+                          "swapRecordDstAmount",
+                          "swapRecordSrcTxTime",
+                          "swapRecordDstTxTime",
+                          "swapRecordSrcTokenLogo",
+                          "swapRecordDstTokenLogo",
+                          "swapRecordSlippage",
+                          "swapRecordErrorMsg",
+                          "referralCode",
+                          "feeAmount",
+                          "feeTokenAddress",
+                          "feeTokenSymbol",
+                          "feeTokenLogo",
+                          "score",
+                          "rebate"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "hasPrev",
+                    "totalPage",
+                    "pageNo",
+                    "pageSize",
+                    "hasNext",
+                    "totalCount",
+                    "items"
+                  ]
+                }
+              },
+              "required": ["data"]
+            }
+          }
+        }
+      }
+    },
+    "/swap-record": {
+      "post": {
+        "tags": ["swap兑换"],
+        "summary": "创建swap兑换记录",
+        "consumes": ["application/json"],
+        "parameters": [
+          {
+            "name": "root",
+            "in": "body",
+            "description": "请求参数",
+            "schema": {
+              "type": "object",
+              "description": "请求参数",
+              "required": [
+                "txStatus",
+                "userAddress",
+                "srcTokenSymbol",
+                "dstTokenSymbol",
+                "txHahs",
+                "srcAmount",
+                "name",
+                "swapFeeRatio",
+                "slippage",
+                "network"
+              ],
+              "properties": {
+                "txStatus": {
+                  "type": "string",
+                  "description": "交易状态",
+                  "mock": { "mock": "@string" }
+                },
+                "userAddress": {
+                  "type": "string",
+                  "description": "用户地址",
+                  "mock": { "mock": "@string" }
+                },
+                "srcTokenSymbol": {
+                  "type": "string",
+                  "description": "卖出代币符号",
+                  "mock": { "mock": "@string" }
+                },
+                "dstTokenSymbol": {
+                  "type": "string",
+                  "description": "买入代币符号",
+                  "mock": { "mock": "@string" }
+                },
+                "txHahs": {
+                  "type": "string",
+                  "description": "交易hash",
+                  "mock": { "mock": "@string" }
+                },
+                "srcAmount": {
+                  "type": "string",
+                  "description": "卖出数量",
+                  "mock": { "mock": "@string" }
+                },
+                "name": {
+                  "type": "string",
+                  "description": "名称",
+                  "mock": { "mock": "@string" }
+                },
+                "swapFeeRatio": {
+                  "type": "string",
+                  "description": "手续费率",
+                  "mock": { "mock": "@string" }
+                },
+                "slippage": {
+                  "type": "string",
+                  "description": "滑点",
+                  "mock": { "mock": "@string" }
+                },
+                "network": {
+                  "type": "string",
+                  "description": "swap合约网络",
+                  "mock": { "mock": "@string" }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "description": "消息返回结构体",
+              "required": ["msg", "code", "data"],
+              "properties": {
+                "msg": {
+                  "type": "string",
+                  "description": "返回消息\n异常时返回错误信息",
+                  "mock": { "mock": "请求成功" }
+                },
+                "code": {
+                  "type": "string",
+                  "description": "返回码\n成功时返回 000 异常时返回码如 105.abm-svc.UNKNOWN",
+                  "mock": { "mock": "000" }
+                },
+                "data": { "type": "object", "description": "返回数据" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/swap:gas": {
+      "get": {
+        "tags": ["swap兑换"],
+        "summary": "查询gas费",
+        "description": "",
+        "parameters": [
+          {
+            "name": "network",
+            "in": "query",
+            "required": false,
+            "description": "网络",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "type": "object",
+              "properties": {
+                "code": { "type": "string" },
+                "msg": { "type": "string" },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "safeGasPrice": { "type": "string" },
+                    "proposeGasPrice": {
+                      "type": "string",
+                      "description": "推荐"
+                    },
+                    "fastGasPrice": { "type": "string", "description": "快" },
+                    "suggestBaseFee": { "type": "string" }
+                  },
+                  "required": [
+                    "safeGasPrice",
+                    "proposeGasPrice",
+                    "fastGasPrice",
+                    "suggestBaseFee"
+                  ]
+                },
+                "fail": { "type": "boolean" }
+              },
+              "required": ["code", "msg", "data", "fail"]
+            }
+          }
+        }
+      }
+    },
+    "/swap-record:confirm": {
+      "post": {
+        "tags": ["swap兑换"],
+        "summary": "查询是否上链成功",
+        "description": "",
+        "consumes": ["application/json"],
+        "parameters": [
+          {
+            "name": "root",
+            "in": "body",
+            "schema": {
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "type": "object",
+              "properties": {
+                "confirmDetails": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "network": { "type": "string" },
+                      "hash": { "type": "string" }
+                    },
+                    "required": ["network", "hash"]
+                  },
+                  "description": "网络"
+                }
+              },
+              "required": ["confirmDetails"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "type": "object",
+              "properties": {
+                "code": { "type": "string" },
+                "msg": { "type": "string" },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "network": { "type": "string" },
+                      "hash": { "type": "string" }
+                    },
+                    "required": ["network", "hash"]
+                  }
+                },
+                "fail": { "type": "boolean" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/swap-summary": {
+      "get": {
+        "tags": ["swap兑换"],
+        "summary": "用户交易情况汇总",
+        "description": "",
+        "parameters": [
+          {
+            "name": "userAddress",
+            "in": "query",
+            "required": true,
+            "description": "用户地址",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "type": "object",
+              "properties": {
+                "code": { "type": "string" },
+                "msg": { "type": "string" },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "allRebated": { "type": "string" },
+                    "rebateRatio": { "type": "string" },
+                    "unpaid": { "type": "string" },
+                    "referralCode": { "type": "string" },
+                    "invitedTimes": { "type": "string" },
+                    "allScore": { "type": "string" }
+                  },
+                  "required": []
+                },
+                "fail": { "type": "boolean" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/swap:confirm": {
+      "post": {
+        "tags": ["swap兑换"],
+        "summary": "确认swap兑换",
+        "description": "",
+        "consumes": ["application/json"],
+        "parameters": [
+          {
+            "name": "root",
+            "in": "body",
+            "schema": {
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "type": "object",
+              "properties": {
+                "srcNetwork": {
+                  "type": "string",
+                  "mock": { "mock": "ETH_Goerli" }
+                },
+                "dstNetwork": {
+                  "type": "string",
+                  "mock": { "mock": "BSC_Chapel" }
+                },
+                "srcRouterName": { "type": "string" },
+                "dstRouterName": { "type": "string" },
+                "interTokenSymbol": {
+                  "type": "string",
+                  "mock": { "mock": "USDT" }
+                },
+                "srcUserAddress": {
+                  "type": "string",
+                  "mock": {
+                    "mock": "0xC2CF131a899E714768b60D4E6468Bfe0D6d1BBaA"
+                  }
+                },
+                "dstUserAddress": {
+                  "type": "string",
+                  "mock": {
+                    "mock": "0xC2CF131a899E714768b60D4E6468Bfe0D6d1BBaA"
+                  }
+                },
+                "srcTokenAddress": {
+                  "type": "string",
+                  "mock": {
+                    "mock": "0xD12270aEF00fC2BF2B7c0bcAb8Ad2868a7D987c3"
+                  }
+                },
+                "srcAmount": { "type": "string" },
+                "dstTokenAddress": {
+                  "type": "string",
+                  "mock": {
+                    "mock": "0xdeA405c2d4A575053D4819BD02Dc2EB9856e30dd"
+                  }
+                },
+                "slippage": { "type": "number" },
+                "referralCode": {
+                  "type": "string",
+                  "mock": {
+                    "mock": "0x0000000000000000000000000000000000000000000000000000000000000001"
+                  },
+                  "description": "邀请码"
+                }
+              },
+              "required": [
+                "srcNetwork",
+                "interTokenSymbol",
+                "srcUserAddress",
+                "dstUserAddress",
+                "srcTokenAddress",
+                "dstNetwork",
+                "slippage",
+                "dstTokenAddress",
+                "srcAmount"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "type": "object",
+              "properties": {
+                "code": { "type": "string" },
+                "msg": { "type": "string" },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "from": { "type": "string" },
+                    "to": { "type": "string" },
+                    "value": { "type": "string" },
+                    "txData": { "type": "string" },
+                    "swapCacheId": {
+                      "type": "string",
+                      "description": "swapID，swap兑换接口中使用"
+                    },
+                    "matchSlippage": { "type": "boolean" },
+                    "expectedReturnAmount": { "type": "string" },
+                    "actualSlippage": { "type": "string" },
+                    "minReturnAmount": { "type": "string" },
+                    "referralCode": {
+                      "type": "string",
+                      "description": "邀请码"
+                    },
+                    "confirmBusinId": {
+                      "type": "string",
+                      "description": "确认单业务编号"
+                    }
+                  },
+                  "required": [
+                    "from",
+                    "to",
+                    "value",
+                    "txData",
+                    "swapCacheId",
+                    "actualSlippage",
+                    "expectedReturnAmount",
+                    "matchSlippage",
+                    "minReturnAmount",
+                    "referralCode",
+                    "confirmBusinId"
+                  ]
+                },
+                "fail": { "type": "boolean" }
+              },
+              "required": ["code", "msg", "data", "fail"]
+            }
+          }
+        }
+      }
+    },
+    "/swap:preview": {
+      "post": {
+        "tags": ["swap兑换"],
+        "summary": "预览swap兑换",
+        "description": "",
+        "consumes": ["application/json"],
+        "parameters": [
+          {
+            "name": "root",
+            "in": "body",
+            "schema": {
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "type": "object",
+              "properties": {
+                "dstNetwork": {
+                  "type": "string",
+                  "description": "网络",
+                  "mock": { "mock": "BSC_Chapel" }
+                },
+                "srcNetwork": {
+                  "type": "string",
+                  "mock": { "mock": "ETH_Goerli" }
+                },
+                "srcUserAddress": {
+                  "type": "string",
+                  "description": "用户地址",
+                  "mock": {
+                    "mock": "0xC2CF131a899E714768b60D4E6468Bfe0D6d1BBaA"
+                  }
+                },
+                "dstUserAddress": {
+                  "type": "string",
+                  "mock": {
+                    "mock": "0xC2CF131a899E714768b60D4E6468Bfe0D6d1BBaA"
+                  }
+                },
+                "srcTokenAddress": {
+                  "type": "string",
+                  "description": "卖出代币地址",
+                  "mock": {
+                    "mock": "0xD12270aEF00fC2BF2B7c0bcAb8Ad2868a7D987c3"
+                  }
+                },
+                "srcAmount": {
+                  "type": "number",
+                  "description": "卖出代币数量",
+                  "mock": { "mock": "1" }
+                },
+                "dstTokenAddress": {
+                  "type": "string",
+                  "description": "买入代币地址",
+                  "mock": {
+                    "mock": "0xdeA405c2d4A575053D4819BD02Dc2EB9856e30dd"
+                  }
+                },
+                "slippage": {
+                  "type": "number",
+                  "description": "滑点，15%传0.15",
+                  "mock": { "mock": "0.5" }
+                },
+                "referralCode": {
+                  "type": "string",
+                  "mock": {
+                    "mock": "0x0000000000000000000000000000000000000000000000000000000000000001"
+                  },
+                  "description": "邀请码"
+                }
+              },
+              "required": [
+                "dstNetwork",
+                "srcUserAddress",
+                "srcTokenAddress",
+                "srcAmount",
+                "dstTokenAddress",
+                "slippage",
+                "srcNetwork",
+                "dstUserAddress"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "type": "object",
+              "properties": {
+                "code": { "type": "string" },
+                "msg": { "type": "string" },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "expiredAt": { "type": "string" },
+                    "srcRouterName": { "type": "string" },
+                    "dstRouterName": { "type": "string" },
+                    "interTokenSymbol": { "type": "string" },
+                    "expectedReturnAmount": { "type": "string" },
+                    "boolSwapFee": { "type": "string", "description": "美元" },
+                    "utmostFee": { "type": "string", "description": "美元" },
+                    "msgFee": {
+                      "type": "string",
+                      "description": "ETHER 用起始链汇率"
+                    },
+                    "dstNetworkGasFee": {
+                      "type": "string",
+                      "description": "ETHER 用起始链汇率"
+                    },
+                    "srcNetworkGasPrice": {
+                      "type": "string",
+                      "description": "gwei"
+                    },
+                    "srcNativeExchangeRate": { "type": "string" },
+                    "dstNativeExchangeRate": { "type": "string" },
+                    "satisfy": { "type": "string" },
+                    "msgFeePrice": { "type": "string" },
+                    "to": { "type": "string" },
+                    "srcUsdExchange": { "type": "string" },
+                    "dstUsdExchange": { "type": "string" },
+                    "minReturnAmount": { "type": "string" }
+                  },
+                  "required": [
+                    "expiredAt",
+                    "dstRouterName",
+                    "interTokenSymbol",
+                    "expectedReturnAmount",
+                    "utmostFee",
+                    "boolSwapFee",
+                    "srcRouterName",
+                    "dstNetworkGasFee",
+                    "msgFee",
+                    "dstNativeExchangeRate",
+                    "srcNativeExchangeRate",
+                    "srcNetworkGasPrice",
+                    "satisfy",
+                    "msgFeePrice",
+                    "to",
+                    "srcUsdExchange",
+                    "dstUsdExchange",
+                    "minReturnAmount"
+                  ]
+                },
+                "fail": { "type": "boolean" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

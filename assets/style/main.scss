@@ -1,0 +1,150 @@
+@import './_float_vue.scss';
+@import './font.scss';
+
+html {
+  width: 100%;
+  height: auto;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --sbtauth-height: 200px;
+  --sbtauth-width: 300px;
+  --sbtauth-padding: 20px;
+  --sbtauth-primary: #6e28fa;
+  --sbtauth-border-radius: 0px;
+  --sbtauth-bubble-left: calc(100% - 100px);
+  --sbtauth-bubble-bottom: 20px;
+}
+
+body {
+  height: auto;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  text-rendering: optimizeSpeed;
+  background-color: $background;
+  overflow-y: scroll;
+  overflow-x: auto;
+  font-family: Poppins, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+  word-break: normal;
+  overflow-wrap: anywhere;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+// 移除触摸 color
+@include phone {
+  button,
+  div,
+  a {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+}
+
+#__nuxt,
+#__layout {
+  min-height: 100%;
+  height: auto;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+textarea {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+}
+
+a {
+  color: $primary;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+
+    @include phone {
+      text-decoration: none;
+    }
+  }
+}
+
+p {
+  margin: 0;
+}
+
+dark-theme {
+  .el-input__inner {
+    background-color: $background !important;
+  }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transform: scaleY(1);
+  max-height: auto;
+  transition: all 0.5s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  transition: all 0.5s;
+  max-height: 0;
+  overflow: hidden;
+  transform: scaleY(0);
+  transform-origin: top;
+}
+
+.image-error {
+  background-color: $secondary;
+}
+
+wcm-modal {
+  z-index: 2000;
+  position: relative;
+}
+
+.el-switch__core {
+  height: 14px !important;
+  width: 24px !important;
+  background-color: $surface !important;
+}
+
+.el-switch.is-checked .el-switch__core {
+  background-color: $primary !important;
+  border-color: $primary !important;
+}
+
+.el-switch__core:after {
+  width: 10px !important;
+  height: 10px !important;
+  background-color: $primary !important;
+}
+
+.el-switch.is-checked .el-switch__core::after {
+  margin-left: -11px !important;
+  background-color: $surface !important;
+}
+
+.el-input__inner {
+  background-color: $surface !important;
+  border-radius: 10px !important;
+  // border-color: none !important;
+  border: 1px solid $border !important;
+}

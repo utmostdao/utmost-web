@@ -1,0 +1,50 @@
+.light-mode {
+  --sbtauth-background: #fff;
+  --sbtauth-onbackground: #000;
+  --sbtauth-priamry: rgba(123, 87, 224, 1);
+
+  --background: rgba(241, 243, 244, 1);
+  --secondary: rgba(255, 255, 255, 1);
+  --surface: rgba(246, 248, 249, 1);
+  --textColor: rgba(43, 46, 72, 1);
+  --textColorOp8: rgba(43, 46, 72, 0.8);
+  --textColorOp5: rgba(43, 46, 72, 0.5);
+  --textColorOp2: rgba(43, 46, 72, 0.2);
+  --border: rgba(244, 244, 244, 1);
+  --devider: #aaaa;
+}
+
+.dark-mode {
+  --sbtauth-background: #fff;
+  --sbtauth-onbackground: #000;
+  --sbtauth-priamry: rgba(123, 87, 224, 1);
+
+  --background: rgb(241, 243, 244);
+  --secondary: rgba(255, 255, 255, 1);
+  --surface: rgba(246, 248, 249, 1);
+  --textColor: rgba(43, 46, 72, 1);
+  --textColorOp8: rgba(43, 46, 72, 0.8);
+  --textColorOp5: rgba(43, 46, 72, 0.5);
+  --textColorOp2: rgba(43, 46, 72, 0.2);
+  --border: rgba(244, 244, 244, 1);
+  --devider: #aaaa;
+}
+
+$primary: rgba(123, 87, 224, 1);
+$textPrimary: rgba(127, 135, 158, 1);
+$error: #ff4d4f;
+$success: #52c41a;
+$warning: #ffc565;
+$radius: 12px;
+$dialogRadius: 12px;
+$shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
+
+$background: var(--background);
+$secondary: var(--secondary);
+$surface: var(--surface);
+$textColor: var(--textColor);
+$textColorOp8: var(--textColorOp8);
+$textColorOp5: var(--textColorOp5);
+$textColorOp2: var(--textColorOp2);
+$border: var(--border);
+$devider: var(--devider);
