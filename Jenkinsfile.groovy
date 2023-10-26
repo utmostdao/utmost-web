@@ -66,10 +66,10 @@ pipeline {
     }
 
     stage('部署更新服务') {
-      environment {
-        K8S_MASTER_IP = credentials('jiaxing-prod-k8s-master-ip')
-        K8S_MASTER = credentials('jiaxing-prod-k8s-auth')
-      }
+      // environment {
+      //   K8S_MASTER_IP = credentials('jiaxing-prod-k8s-master-ip')
+      //   K8S_MASTER = credentials('jiaxing-prod-k8s-auth')
+      // }
       steps {
         container('sshpass') {
           script {
