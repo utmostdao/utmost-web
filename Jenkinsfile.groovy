@@ -3,7 +3,6 @@
 def builder = new com.abm.cicd.front.web.build()
 def yamlFile = builder.get_web_node_yaml()
 
-
 pipeline {
   environment {
     DING_DING_ROBOT = 'iotmatrix'
@@ -32,20 +31,19 @@ pipeline {
   }
 
   stages {
-
     stage('编译') {
       steps {
         container('node') {
           script {
             def envCmd
             if (env.BRANCH_NAME ==~ /(.*master.*)|(.*main.*)/) {
-                envCmd = 'cp .env.production .env'
+              envCmd = 'cp .env.production .env'
             } else {
-                envCmd = 'cp .env.preview .env'
+              envCmd = 'cp .env.preview .env'
             }
             withCredentials([usernamePassword(credentialsId: 'github_chanson', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
               def echoCmd = "echo \"//npm.pkg.github.com/:_authToken=" + env.GIT_PASSWORD + "\" >> .npmrc"
-              builder.build_web_node_yarn_package_custom(echoCmd, "yarn --registry https://registry.npmmirror.com", envCmd, "yarn build && yarn generate")
+              builder.build_web_node_yarn_package_custom(echoCmd, 'yarn --registry https://registry.npmmirror.com', envCmd, 'yarn build && yarn generate')
             }
           }
         }
@@ -66,10 +64,13 @@ pipeline {
     }
 
     stage('部署更新服务') {
-      // environment {
-      //   K8S_MASTER_IP = credentials('jiaxing-prod-k8s-master-ip')
-      //   K8S_MASTER = credentials('jiaxing-prod-k8s-auth')
-      // }
+      environment {
+        K8S_MASTER_IP = credentials('jiaxing-prod-k8s-master-ip')
+        K8S_MASTER = credentials('jiaxing-prod-k8s-auth')
+        K8S_MASTER_TEST_IP = credentials('jiaxing-k8s-master-ip')
+        K8S_MASTER_TEST = credentials('381816aa-abe9-4a66-8842-5f141dff42b4')
+      }
+
       steps {
         container('sshpass') {
           script {
@@ -81,7 +82,6 @@ pipeline {
   }
 
   post {
-
     success {
       wrap([$class: 'BuildUser']) {
         script {
