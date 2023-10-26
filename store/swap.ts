@@ -326,7 +326,8 @@ export const actions = actionTree(
         commit('setErrorStr', undefined)
       } catch (err) {
         if (err instanceof Error) {
-          commit('setErrorStr', err.message)
+          const errs = err.message?.split?.('(')
+          commit('setErrorStr', errs?.[0] ?? err.message)
         }
       } finally {
         commit('setTimerInfo', { key: 'loading', value: false })
