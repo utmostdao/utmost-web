@@ -36,8 +36,8 @@
         v-for="item in tabs"
         :key="item.id"
         class="tab"
-        :class="{ actived: activedTab === item.id }"
-        @click="activedTab = item.id"
+        :class="{ active: activeTab === item.id }"
+        @click="activeTab = item.id"
       >
         {{ item.label }}
       </div>
@@ -68,7 +68,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      activedTab: 'all',
+      activeTab: 'all',
       historyList: [] as SwapRecords['items'],
       queryParams: {
         pageNo: 1,
@@ -108,7 +108,7 @@ export default Vue.extend({
       })
     }
 
-    const status = this.activedTab === 'all' ? undefined : this.activedTab
+    const status = this.activeTab === 'all' ? undefined : this.activeTab
     const res = await this.$api.yapi.swapRecords({
       ...this.queryParams,
       userAddress: this.userAddress,
@@ -117,8 +117,8 @@ export default Vue.extend({
 
     if (
       !(
-        status === this.activedTab ||
-        (status === undefined && this.activedTab === 'all')
+        status === this.activeTab ||
+        (status === undefined && this.activeTab === 'all')
       )
     ) {
       return
@@ -161,7 +161,7 @@ export default Vue.extend({
         this.queryParams.pageNo = 1
       }
     },
-    activedTab() {
+    activeTab() {
       this.historyList = []
       this.queryParams.pageNo = 1
       this.silentFetch = false
@@ -264,9 +264,12 @@ export default Vue.extend({
 
   .list-tabs {
     padding: 20px 0;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    justify-items: center;
+    // display: grid;
+    // grid-template-columns: 1fr 1fr 1fr 1fr;
+    // justify-items: center;
+    // align-items: center;
+    @include flexRc;
+    justify-content: flex-start;
     position: sticky;
     top: 110px;
     z-index: 100;
@@ -277,32 +280,35 @@ export default Vue.extend({
     }
 
     .tab {
+      height: 26px;
       color: $textColorOp5;
       text-align: center;
-      font-size: 14px;
+      font-size: 12px;
       font-style: normal;
       font-weight: 500;
       line-height: 130%;
       position: relative;
       cursor: pointer;
       transition: 0.3s;
+      padding: 0 10px;
+      margin-right: 10px;
 
       &:hover {
         color: $primary;
         transition: 0.3s;
       }
-      &.actived {
+      &.active {
         color: $primary;
-        text-align: center;
+        // text-align: center;
         font-size: 14px;
         font-style: normal;
-        font-weight: 700;
+        font-weight: 500;
         line-height: 130%;
         transition: 0.3s;
 
         &::before {
           content: '';
-          width: 100%;
+          width: calc(100% - 20px);
           height: 3px;
           background-color: $primary;
           position: absolute;
