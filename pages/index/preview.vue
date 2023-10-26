@@ -70,9 +70,12 @@ export default Vue.extend({
     onSuccess() {
       this.loading = false
     },
-    async onError() {
-      await this.$accessor.swap.getSwapPreviewInfos()
-      this.addTimer()
+    onError() {
+      // await this.$accessor.swap.getSwapPreviewInfos()
+      // this.addTimer()
+      this.$router.replace(
+        this.localePath({ path: '/', query: this.$route.query })
+      )
     },
     addTimer() {
       if (!this.timer) {
