@@ -108,6 +108,7 @@ export default Vue.extend({
     const res = await this.$api.yapi.swapRebates({
       ...this.queryParams,
       userAddress: this.userAddress,
+      reverseStatus: 'PENDING',
     })
 
     this.totalPage = res.totalPage
@@ -192,6 +193,7 @@ export default Vue.extend({
         cursor: pointer;
         user-select: none;
         position: relative;
+        align-items: flex-start;
 
         &::before {
           content: '';
@@ -199,6 +201,7 @@ export default Vue.extend({
           height: 1px;
           border-radius: 50%;
           position: absolute;
+          left: 10px;
           bottom: 0;
           transition: 0.4s;
         }
@@ -241,6 +244,7 @@ export default Vue.extend({
         font-size: 14px;
         font-weight: bold;
         color: $textColor;
+        align-items: flex-start;
       }
     }
     .loading {
@@ -268,6 +272,7 @@ export default Vue.extend({
 
         .item {
           @include flexRc;
+          justify-content: flex-start;
 
           &.jump-icon {
             cursor: pointer;
