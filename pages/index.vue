@@ -24,7 +24,7 @@ export default Vue.extend({
     userAccount: {
       deep: true,
       handler(val: string, old: string) {
-        if (!val || val.toLowerCase() !== old.toLowerCase()) {
+        if (!val || val?.toLowerCase() !== old?.toLowerCase()) {
           if (this.getRouteBaseName() !== 'index') {
             this.$router.replace(
               this.localePath({ path: '/', query: this.$route.query })

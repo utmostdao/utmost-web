@@ -492,6 +492,8 @@ export interface paths {
           pageNo: number
           pageSize: number
           userAddress: string
+          /** 想要过滤掉的状态，多个值可用英文,分隔 */
+          reverseStatus?: string
         }
       }
       responses: {

@@ -37,10 +37,12 @@ export default Vue.extend({
 <style scoped lang="scss">
 .referral-rule {
   width: 450px;
+  max-height: calc(100vh * 0.8);
   flex-shrink: 0;
   background-color: $secondary;
   border-radius: $radius;
   padding: 16px 20px;
+  overflow: auto;
 
   @include phone {
     width: 100%;
@@ -78,6 +80,7 @@ export default Vue.extend({
         font-weight: 400;
         line-height: 1.5; /* 15.6px */
         white-space: pre-line;
+        word-break: keep-all;
       }
     }
   }
