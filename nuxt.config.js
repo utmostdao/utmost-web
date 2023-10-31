@@ -49,10 +49,7 @@ export default {
   publicRuntimeConfig: {
     baseUrl: process.env.APP_BASE_URL,
     appUrl: process.env.APP_URL,
-    alchemyKey: process.env.ALCHEMY_KEY,
     isProduction: process.env.IS_PRODUCTION,
-    boolScanUrl: process.env.BOOL_SCAN_URL,
-    bitcoinAnchorAddress: process.env.BITCOIN_ANCHOR_ADDRESS,
   },
 
   components: {
