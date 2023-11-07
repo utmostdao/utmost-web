@@ -11,7 +11,7 @@
       overlay-class="dialog-overlay"
       :content-class="['dialog-content', { fullscreen }]"
       :click-to-close="false"
-      :lock-scroll="true"
+      :lock-scroll="false"
       v-on="$listeners"
     >
       <div class="container" :class="{ 'fullscreen-container': fullscreen }">
@@ -149,7 +149,7 @@ export default Vue.extend({
   position: relative;
 
   .container {
-    width: 520px;
+    width: 450px;
     background-color: $secondary;
     border-radius: $dialogRadius;
     padding-bottom: 20px;
@@ -167,19 +167,23 @@ export default Vue.extend({
     }
     .header {
       position: relative;
-      width: calc(100% - 28px);
+      width: 100%;
       text-align: center;
+      padding: 0 30px;
 
       // border-bottom: 1px solid $devider;
 
       .title {
-        font-size: 15px;
-        font-weight: bold;
         color: $textColor;
-        line-height: 21px;
         overflow: hidden;
-        margin: 0 14px;
-        padding: 24px 4px 14px 4px;
+        // margin: 0 14px;
+        padding: 24px 0px 30px 0px;
+        text-align: left;
+        font-family: Poppins;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 130%;
       }
     }
     .icon {
@@ -195,7 +199,7 @@ export default Vue.extend({
       max-height: calc(100vh - 60px - 89px) !important;
     }
     .content {
-      padding: 0 20px;
+      padding: 0 30px;
       width: 100%;
       height: auto;
 

@@ -370,7 +370,6 @@ export const actions = actionTree(
         if (!getters.isEnoughBridgeFee) {
           dispatch('removerTimer')
         }
-
         isOriginSuccess = true
 
         const erc20 = await this.app.$onboard.getBalance({
@@ -379,7 +378,6 @@ export const actions = actionTree(
           userAddress: userAddress!,
           decimals: Number(fromToken!.swapTokenDecimals!),
         })
-
         commit('setBalance', erc20)
 
         if (!getters.isEnoughBalance) {

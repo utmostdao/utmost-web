@@ -8,6 +8,7 @@ import { Chain } from '~/types/api'
 import { SwapContractDetails } from '~/types/crossSwagger'
 import chains, { Chain as ChainConfig } from '~/utils/chains'
 import { ORIGIN_TOKEN } from '~/utils/constants'
+import { erc20ABI } from '~/utils/abi'
 
 export type Transaction = {
   to?: string
@@ -62,6 +63,19 @@ export type Onboard = OnboardAPI & {
     contractAddress: string
     userAddress: string
     decimals: number
+  }) => Promise<string>
+
+  getTokenSymbol: (info: {
+    chainId: number
+    contractAddress: string
+  }) => Promise<string>
+  getTokenName: (info: {
+    chainId: number
+    contractAddress: string
+  }) => Promise<string>
+  getTokenDecimals: (info: {
+    chainId: number
+    contractAddress: string
   }) => Promise<string>
 }
 
@@ -142,14 +156,26 @@ const wallet: Plugin = ({ $accessor }, inject) => {
     userAddress: string
     decimals: number
   }) {
-    const chainId16 = `0x${chainId.toString(16)}`
+    const connectedChianId = Number(
+      $accessor.wallet.activeEvmWallet?.chainId ?? '-1'
+    )
+    // if (chainId !== connectedChianId) {
+    //   await $accessor.wallet.changeNetwork(chainId16)
+    // }
 
-    if (chainId !== Number($accessor.wallet.activeEvmWallet?.chainId ?? '')) {
-      await $accessor.wallet.changeNetwork(chainId16)
+    let provider
+    const chainInfo = supportedChains.find(
+      (item) => Number(item.id) === chainId
+    )
+    if (connectedChianId !== chainId && chainInfo) {
+      provider = new ethers.providers.JsonRpcProvider(chainInfo.rpcUrl)
+    } else {
+      if (chainId !== connectedChianId) {
+        await $accessor.wallet.changeNetwork('0x' + chainId.toString(16))
+      }
+      const walletProvider = $accessor.wallet.activeEvmWallet?.provider
+      provider = new ethers.providers.Web3Provider(walletProvider)
     }
-
-    const walletProvider = $accessor.wallet.activeEvmWallet?.provider
-    const provider = new ethers.providers.Web3Provider(walletProvider)
 
     // 原生币
     if (contractAddress.toLowerCase() === ORIGIN_TOKEN) {
@@ -157,13 +183,63 @@ const wallet: Plugin = ({ $accessor }, inject) => {
       return ethers.utils.formatUnits(res.toString(), decimals.toString())
     }
 
-    const contract = new ethers.Contract(
-      contractAddress,
-      ['function balanceOf(address) view returns (uint256)'],
-      provider.getSigner()
-    )
+    const contract = new ethers.Contract(contractAddress, erc20ABI, provider)
     const res = await contract.balanceOf(userAddress)
     return ethers.utils.formatUnits(res.toString(), decimals.toString())
+  }
+
+  async function getTokenSymbol({
+    chainId,
+    contractAddress,
+  }: {
+    chainId: number
+    contractAddress: string
+  }) {
+    const chainInfo = supportedChains.find(
+      (item) => Number(item.id) === chainId
+    )
+    if (!chainInfo) return
+    const provider = new ethers.providers.JsonRpcProvider(chainInfo.rpcUrl)
+    const contract = new ethers.Contract(contractAddress, erc20ABI, provider)
+    const res = await contract.symbol()
+
+    return res.toString()
+  }
+
+  async function getTokenName({
+    chainId,
+    contractAddress,
+  }: {
+    chainId: number
+    contractAddress: string
+  }) {
+    const chainInfo = supportedChains.find(
+      (item) => Number(item.id) === chainId
+    )
+    if (!chainInfo) return
+    const provider = new ethers.providers.JsonRpcProvider(chainInfo.rpcUrl)
+    const contract = new ethers.Contract(contractAddress, erc20ABI, provider)
+    const res = await contract.name()
+
+    return res.toString()
+  }
+
+  async function getTokenDecimals({
+    chainId,
+    contractAddress,
+  }: {
+    chainId: number
+    contractAddress: string
+  }) {
+    const chainInfo = supportedChains.find(
+      (item) => Number(item.id) === chainId
+    )
+    if (!chainInfo) return
+    const provider = new ethers.providers.JsonRpcProvider(chainInfo.rpcUrl)
+    const contract = new ethers.Contract(contractAddress, erc20ABI, provider)
+    const res = await contract.decimals()
+
+    return res.toString()
   }
 
   const onboard = init({
@@ -187,6 +263,9 @@ const wallet: Plugin = ({ $accessor }, inject) => {
     supportedNetworks,
     waitForTransaction,
     getBalance,
+    getTokenSymbol,
+    getTokenName,
+    getTokenDecimals,
   })
 }
 

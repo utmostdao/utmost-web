@@ -68,9 +68,9 @@
           <!-- token list -->
           <div class="network-token-list">
             <template v-if="!loadingByToken || tokenList.length > 0">
-              <template v-if="tokenList.length > 0">
+              <template v-if="[...customTokens, ...tokenList].length > 0">
                 <div
-                  v-for="token in tokenList"
+                  v-for="token in [...customTokens, ...tokenList]"
                   :key="token.swapTokenID"
                   class="token-item"
                   :class="{
@@ -87,7 +87,12 @@
                     <div class="left">
                       <div class="token-box">
                         <img
-                          :src="$helpers.generateImgUrl(token.swapTokenIcon)"
+                          :src="
+                            token.swapTokenID &&
+                            token.swapTokenID.endsWith('custom')
+                              ? token.swapTokenIcon
+                              : $helpers.generateImgUrl(token.swapTokenIcon)
+                          "
                           class="token-icon"
                         />
                         <img
@@ -117,8 +122,32 @@
                     </div>
 
                     <div class="right">
-                      <div class="balance">
-                        {{ $helpers.shortFloatNum(token.balance || '0', 6) }}
+                      <PrimaryButton
+                        v-if="isShowImportBtn(token)"
+                        size="mini"
+                        @click="onImport(token)"
+                      >
+                        {{ $t('import') }}
+                      </PrimaryButton>
+                      <div v-else class="balance">
+                        <template
+                          v-if="
+                            token.swapTokenID &&
+                            token.swapTokenID.endsWith('custom')
+                          "
+                        >
+                          {{
+                            tokenBalance && token.swapTokenContractAddress
+                              ? $helpers.shortFloatNum(
+                                  tokenBalance[token.swapTokenContractAddress],
+                                  6
+                                )
+                              : '0'
+                          }}
+                        </template>
+                        <template v-else>
+                          {{ $helpers.shortFloatNum(token.balance || '0', 6) }}
+                        </template>
                       </div>
                     </div>
                   </div>
@@ -155,6 +184,7 @@
 </template>
 
 <script lang="ts">
+import { ethers } from 'ethers'
 import Vue from 'vue'
 import { $vfm } from 'vue-final-modal-types'
 import { SwapChainDetails, SwapTokens } from '~/types/swagger'
@@ -164,7 +194,7 @@ type ModelParams = {
   onSelect?: (chain, token) => void
   selectedChains?: SwapChainDetails
   selectedTokens?: SwapTokens['items']
-  disabledToknes?: SwapTokens['items']
+  disabledTokens?: SwapTokens['items']
 }
 
 export default Vue.extend({
@@ -184,6 +214,8 @@ export default Vue.extend({
       tokenList: [] as SwapTokens['items'],
       selectChain: undefined as undefined | SwapChainDetails[0],
       selectToken: undefined as undefined | SwapTokens['items'][0],
+      importCount: 0, // 用于导入token信息后触发computed customToken更新，
+      tokenBalance: undefined as { [key: string]: string } | undefined,
     }
   },
   computed: {
@@ -193,15 +225,47 @@ export default Vue.extend({
     selectedTokens(): ModelParams['selectedTokens'] {
       return this.modelParams?.selectedTokens
     },
-    disabledChians(): ModelParams['disabledToknes'] {
-      return this.modelParams?.disabledToknes
+    disabledChains(): ModelParams['disabledTokens'] {
+      return this.modelParams?.disabledTokens
     },
     disabledTokenIds(): string[] {
       return (
-        this.modelParams?.disabledToknes?.map(
+        this.modelParams?.disabledTokens?.map(
           (item) => item.swapTokenID ?? ''
         ) ?? []
       )
+    },
+    customTokens(): SwapTokens['items'] {
+      // 仅用于触发更新数据localeStorage数据，实际不做任何判断，importCount数据由onImport事件执行后更新
+      if (this.importCount === undefined) return []
+
+      if (!this.selectChain?.chainID) return []
+      const tokens = this.$helpers.customTokens(this.selectChain.chainID).get()
+      if (this.searchToken) {
+        if (ethers.utils.isAddress(this.searchToken)) {
+          const token = tokens.find(
+            (item) => item.swapTokenContractAddress === this.searchToken
+          )
+          return token ? [token] : []
+        } else {
+          return tokens.filter((item) => {
+            return (
+              item.swapTokenName?.includes(this.searchToken!) ||
+              item.swapThirdPartySymbol?.includes(this.searchToken!)
+            )
+          })
+        }
+      }
+
+      return tokens
+    },
+  },
+  watch: {
+    customTokens: {
+      deep: true,
+      handler() {
+        this.getTokenBalance()
+      },
     },
   },
   methods: {
@@ -230,10 +294,102 @@ export default Vue.extend({
         this.getTokens()
       }
     },
+    isShowImportBtn(token: SwapTokens['items'][0]) {
+      return (
+        token.swapTokenID?.endsWith('custom') &&
+        !this.customTokens.find(
+          (item) =>
+            item.swapTokenContractAddress === token.swapTokenContractAddress
+        )
+      )
+    },
+    onImport(token: SwapTokens['items'][0]) {
+      if (this.selectChain?.chainID) {
+        this.$helpers.customTokens(this.selectChain.chainID).set(token)
+        this.tokenList = []
+        this.importCount += 1
+      }
+    },
     async onScroll(pos: number) {
       if (pos < 100 && !this.loadingByToken) {
         this.queryTokenParams.pageNo += 1
         await this.getTokens()
+      }
+    },
+    async getTokenBalance() {
+      const tokens = this.customTokens
+      const balanceMap = {}
+      for (const item of tokens) {
+        try {
+          const balance = await this.$onboard.getBalance({
+            chainId: Number(this.selectChain!.chainID!),
+            contractAddress: item.swapTokenContractAddress!,
+            userAddress:
+              this.$accessor.wallet.activeEvmWallet!.accounts[0]!.address!,
+            decimals: Number(item.swapTokenDecimals!),
+          })
+          balanceMap[item.swapTokenContractAddress!] = balance
+        } catch (err) {
+          balanceMap[item.swapTokenContractAddress!] = '0'
+        }
+      }
+
+      this.tokenBalance = balanceMap
+    },
+    async generateCustomToken() {
+      if (this.tokenList.length !== 0) return
+
+      if (!this.searchToken) return
+      if (ethers.utils.isAddress(this.searchToken)) {
+        if (
+          [...this.customTokens, ...this.tokenList].find(
+            (item) => item.swapTokenContractAddress === this.searchToken?.trim()
+          )
+        ) {
+          return
+        }
+
+        const customToken = {
+          balance: '0',
+          convertId: null,
+          legalTenderExchangeRatio: { USD: '0' },
+          swapThirdPartySymbol: '',
+          swapTokenContractAddress: this.searchToken.trim(),
+          swapTokenDecimals: 18,
+          swapTokenID: Date.now().toString() + '.custom',
+          swapTokenIcon: 'custom-token.png',
+          swapTokenName: '',
+          swapTokenNetwork: this.selectChain?.swapNetwork,
+          swapTokenSymbol: '',
+          tokenType: 0,
+          usdExchange: '0',
+        }
+
+        try {
+          const name = await this.$onboard.getTokenName({
+            chainId: Number(this.selectChain?.chainID ?? '0'),
+            contractAddress: customToken.swapTokenContractAddress,
+          })
+          const symbol = await this.$onboard.getTokenSymbol({
+            chainId: Number(this.selectChain?.chainID ?? '0'),
+            contractAddress: customToken.swapTokenContractAddress,
+          })
+
+          customToken.swapTokenSymbol = symbol
+          customToken.swapThirdPartySymbol = symbol
+          customToken.swapTokenName = name
+
+          if (
+            ![...this.customTokens, ...this.tokenList].find(
+              (item) =>
+                item.swapTokenContractAddress === this.searchToken?.trim()
+            )
+          ) {
+            this.tokenList.push(customToken as any)
+          }
+        } catch (err) {
+          this.$message.error(this.$t('invalidErc20').toString())
+        }
       }
     },
     async getChains() {
@@ -305,9 +461,12 @@ export default Vue.extend({
         // 获取本地缓存
         this.loadingByToken = true
 
-        const localeTokens = this.$helpers
-          .tokenCaches(Number(this.selectChain?.chainID))
-          .get(this.queryTokenParams.pageNo)
+        /// 搜索时不使用本地缓存
+        const localeTokens = this.searchToken
+          ? []
+          : this.$helpers
+              .tokenCaches(Number(this.selectChain?.chainID))
+              .get(this.queryTokenParams.pageNo)
 
         // 避免切换网络时数据响应不及时导致页面数据错误
         if (this.queryTokenParams.pageNo === 1) {
@@ -337,6 +496,8 @@ export default Vue.extend({
           .tokenCaches(Number(this.selectChain?.chainID))
           .set(res.items ?? [], this.queryTokenParams.pageNo)
         setTokens(res.items?.[0]?.swapTokenNetwork ?? '', res.items ?? [])
+
+        await this.generateCustomToken()
       } catch (err) {
         if (err instanceof Error) {
           this.$message.error(err.message)
@@ -414,6 +575,7 @@ export default Vue.extend({
     position: absolute;
     right: 15px;
     cursor: pointer;
+    display: inline-flex;
 
     ::v-deep svg {
       circle,
