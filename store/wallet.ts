@@ -170,6 +170,7 @@ export const actions = actionTree(
       const { provider } = selectedWallet
       try {
         const [address] = await requestAccounts(provider)
+
         if (!address) {
           return
         }
@@ -235,22 +236,27 @@ export const actions = actionTree(
       if (process.client) localStorage.removeItem('connectedWallets')
     },
 
-    async changeNetwork({ getters, state, commit }, chainId: string) {
+    async changeNetwork(
+      { getters, state, commit },
+      chainId: string
+    ): Promise<boolean | undefined> {
       if (document.hidden) {
         return true
       }
       if (chainId === state.activeEvmWallet?.chainId) {
         return true
       }
-      if (
-        !['metamask', 'sbtauth'].includes(
-          getters.activeEvmWallet?.label.toLocaleLowerCase() ?? ''
-        )
-      ) {
-        throw new Error(
-          'Not supported, please change the wallet network and reconnect again'
-        )
-      }
+
+      // if (
+      //   !['metamask', 'sbtauth'].includes(
+      //     getters.activeEvmWallet?.label.toLocaleLowerCase() ?? ''
+      //   )
+      // ) {
+      //   throw new Error(
+      //     'Not supported, please change the wallet network and reconnect again'
+      //   )
+      // }
+
       if (getters.activeEvmWallet?.label === 'sbtauth') {
         const res = await this.app.$sbtauth.provider.setChainId(chainId)
 

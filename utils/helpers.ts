@@ -4,8 +4,61 @@ import { Decimal } from 'decimal.js'
 import { hexValue } from 'ethers/lib/utils'
 import dayjs from 'dayjs'
 import { Network } from '~/plugins/helpers'
-import { CHAIN_TOKENS } from '~/utils/constants'
+import { CHAIN_TOKENS, CUSTOM_TOKENS } from '~/utils/constants'
 import { SwapTokens } from '~/types/swagger'
+
+export function customTokens(chainId?: string) {
+  const localeTokensJson = localStorage.getItem(CUSTOM_TOKENS)
+  let chainObj
+  if (localeTokensJson) {
+    chainObj = JSON.parse(localeTokensJson)
+  }
+  return {
+    set: (token: SwapTokens['items'][0]) => {
+      if (!chainId) return
+      const tokens: SwapTokens['items'] = chainObj?.[chainId] ?? []
+
+      if (!tokens.find((item) => item.swapTokenID === token.swapTokenID)) {
+        tokens.push(token)
+      }
+
+      if (chainObj) {
+        chainObj[chainId] = tokens
+      } else {
+        chainObj = { [chainId]: tokens }
+      }
+
+      localStorage.setItem(CUSTOM_TOKENS, JSON.stringify(chainObj))
+    },
+    get: (): SwapTokens['items'] => {
+      if (!chainId) return []
+      return chainObj?.[chainId] ?? []
+    },
+    getAll: (): { [key: string]: SwapTokens['items'] } | undefined => {
+      return chainObj
+    },
+    delete: (token: SwapTokens['items'][0]): boolean => {
+      if (!chainId) return false
+      if (chainObj) {
+        const tokens: SwapTokens['items'] = chainObj[chainId] ?? []
+        const i = tokens.findIndex(
+          (item) =>
+            item.swapTokenContractAddress === token.swapTokenContractAddress
+        )
+
+        if (i !== -1) {
+          tokens.splice(i, 1)
+          chainObj[chainId] = tokens
+          localStorage.setItem(CUSTOM_TOKENS, JSON.stringify(chainObj))
+          return true
+        } else {
+          return false
+        }
+      }
+      return false
+    },
+  }
+}
 
 export function tokenCaches(chainID: number): {
   set: (tokens: SwapTokens['items'], pageNo: number) => void
@@ -29,10 +82,12 @@ export function tokenCaches(chainID: number): {
 
 export function generateImgUrl(url?: string): string {
   if (!url) return ''
+  if (!url.startsWith('http')) return url
   return 'https://oversea-proxy.safematrix.io/' + url
 }
 
 export function shortFloatNum(i: number | string, position: number): string {
+  if (!i) return i?.toString() ?? '0'
   const str = i.toString().split('.')
   const s1 = str?.[0] || 0
   const s2 = str[1]?.substring(0, position) || 0

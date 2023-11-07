@@ -23,3 +23,5 @@ export const NUM_REG = /^[0-9]+\.?([0-9]+)?$/i // 验证数字： 0.0
 export const REFERRER_CONTRACT_TEST =
   '0xcFc2a621a207563C96D4413377Eb558E9C54C8a3'
 export const REFERRER_CONTRACT = '0x1add183f42382cc70b005af15608efcc1342e6e3'
+
+export const CUSTOM_TOKENS = 'CUSTOM_TOKENS'

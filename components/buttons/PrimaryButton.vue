@@ -5,7 +5,7 @@
     class="primary-button"
     :disabled="disabled || loading"
     :size="size"
-    @click="$emit('click')"
+    @click.stop="$emit('click')"
   >
     <spinner-loader
       v-if="loading"
@@ -21,7 +21,7 @@ import Vue, { PropOptions } from 'vue'
 import {} from 'element-ui/types/button'
 
 export default Vue.extend({
-  name: 'PrimaryBotton',
+  name: 'PrimaryButton',
   props: {
     loading: {
       type: Boolean,

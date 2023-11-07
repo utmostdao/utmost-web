@@ -1,6 +1,6 @@
 <template>
   <div class="slippage-setting">
-    <div class="title">{{ $t('settings') }}</div>
+    <!-- <div class="title">{{ $t('settings') }}</div> -->
 
     <div class="warning">
       <div class="warning-title">
@@ -169,6 +169,10 @@ export default Vue.extend({
   align-items: center;
 }
 
+::v-deep .el-input__inner {
+  border-radius: 0 !important;
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s;
@@ -178,54 +182,49 @@ export default Vue.extend({
   opacity: 0;
 }
 .slippage-setting {
-  width: 352px;
-  padding: 16px 20px;
+  width: 100%;
+  // padding: 16px 20px;
   @include flexC;
   align-items: flex-start;
+  margin-bottom: 30px;
 
   .title {
     color: $textColor;
-    font-size: 14px;
+    font-family: Poppins;
+    font-size: 16px;
     font-style: normal;
-    font-weight: 700;
+    font-weight: 500;
     line-height: 130%;
   }
   .warning {
     @include flexC;
     align-items: flex-start;
-    margin: 16px 0;
     .warning-title {
       color: $textColor;
-      font-size: 10px;
+      font-family: Poppins;
+      font-size: 16px;
       font-style: normal;
       font-weight: 500;
       line-height: 130%;
     }
     .info {
-      font-size: 12px;
-      font-weight: 400;
       color: $textColorOp5;
       line-height: 16px;
       margin-top: 6px;
+      font-family: Poppins;
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 130%;
     }
   }
   .selector {
-    margin-top: 12px;
+    margin-top: 24px;
     width: 100%;
     height: 40px;
     border-radius: 20px;
-    // background: $background;
     position: relative;
-    // .indicator {
-    //   position: absolute;
-    //   height: 32px;
-    //   margin: 4px 6px;
-    //   border-radius: 16px;
-    //   width: calc(25% - 12px);
-    //   left: 0%;
-    //   background: $primary;
-    //   transition: all 0.3s ease-out;
-    // }
+
     .options {
       left: 0;
       position: absolute;
@@ -238,9 +237,10 @@ export default Vue.extend({
       z-index: 5;
       cursor: pointer;
       color: $textColor;
+      gap: 20px;
       .option {
-        width: 74px;
-        height: 30px;
+        width: 100%;
+        height: 40px;
         flex-shrink: 0;
         text-align: center;
         border-radius: 4px;
@@ -251,6 +251,7 @@ export default Vue.extend({
         font-style: normal;
         font-weight: 500;
         line-height: 130%;
+        overflow: hidden;
 
         .input {
           width: 100%;
