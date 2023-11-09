@@ -2,7 +2,7 @@
   <basic-dialog name="wallet-panel-dialog" :fullscreen="true">
     <template #content="{}">
       <div class="wallet-panel">
-        <div class="top-tab-bar">
+        <!-- <div class="top-tab-bar">
           <tab-bar
             :tabs="tabs"
             :active-tab="activeTab"
@@ -29,7 +29,7 @@
               @click.native="$accessor.wallet.setActiveWallet(wallet)"
             ></wallet-card>
           </div>
-        </div>
+        </div> -->
         <div v-show="activeTab === 'custom'" class="connect-button-list">
           <div class="wallet-type-header">
             <div class="wallet-type">EVM</div>
