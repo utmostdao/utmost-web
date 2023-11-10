@@ -2,6 +2,34 @@
   <basic-dialog name="wallet-panel-dialog" :fullscreen="true">
     <template #content="{}">
       <div class="wallet-panel">
+        <!-- <div class="top-tab-bar">
+          <tab-bar
+            :tabs="tabs"
+            :active-tab="activeTab"
+            @select="selectTab"
+          ></tab-bar>
+        </div>
+        <div v-show="activeTab === 'sbtauth'" style="width: 100%">
+          <div
+            v-show="!sbtauthLogined"
+            id="sbtauth-login"
+            ref="sbtauth-login"
+          ></div>
+          <div v-if="sbtauthLogined" class="connect-button-list">
+            <div class="wallet-type-header">
+              <div class="wallet-type">SBTAuth</div>
+              <div class="disconnect" @click="disconnectSbtauth">
+                {{ $t('disconnect') }}
+              </div>
+            </div>
+            <wallet-card
+              v-for="wallet in sbtauthWallets"
+              :key="wallet.chain"
+              :connect-wallet="wallet"
+              @click.native="$accessor.wallet.setActiveWallet(wallet)"
+            ></wallet-card>
+          </div>
+        </div> -->
         <div v-show="activeTab === 'custom'" class="connect-button-list">
           <div class="wallet-type-header">
             <div class="wallet-type">EVM</div>
@@ -118,10 +146,10 @@ export default Vue.extend({
         this.icons.push(icon)
       }
     },
-    disconnectCustomeEvmWallet(): void {
+    disconnectCustomEvmWallet(): void {
       this.$accessor.wallet.disconnect()
     },
-    diconnectSbtauth() {
+    disconnectSbtauth() {
       this.$sbtauth.disconnect()
     },
     connectWallet(wallet: WalletModule) {

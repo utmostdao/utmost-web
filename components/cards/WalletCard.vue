@@ -84,6 +84,14 @@ export default Vue.extend({
     height: 30px;
     border-radius: 4px;
     margin-right: 6px;
+    overflow: hidden;
+
+    ::v-deep * {
+      width: 100%;
+      height: 100%;
+      border-radius: 4px;
+      overflow: hidden;
+    }
   }
   .info {
     @include flexC;

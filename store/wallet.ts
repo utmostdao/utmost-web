@@ -1,7 +1,7 @@
 import {
   addWallet,
-  removeWallet,
-  disconnectWallet$,
+  // removeWallet,
+  // disconnectWallet$,
   trackWallet,
   requestAccounts,
   getChainId,
@@ -212,7 +212,6 @@ export const actions = actionTree(
       })
 
       const loadedIcon = await wallet.getIcon()
-
       const selectedWallet = {
         label: wallet.label,
         icon: loadedIcon,
@@ -225,32 +224,38 @@ export const actions = actionTree(
     },
 
     /// Disconnect evm wallet with onboard
-    disconnect({ getters, commit }) {
+    async disconnect({ getters, commit }) {
       const label = getters.activeEvmWallet?.label
       commit('clear')
       if (label) {
-        removeWallet(label)
-        disconnectWallet$.next(label)
+        // removeWallet(label)
+        await this.app.$onboard.disconnectWallet({ label })
+        // disconnectWallet$.next(label)
       }
       if (process.client) localStorage.removeItem('connectedWallets')
     },
 
-    async changeNetwork({ getters, state, commit }, chainId: string) {
+    async changeNetwork(
+      { getters, state, commit },
+      chainId: string
+    ): Promise<boolean | undefined> {
       if (document.hidden) {
         return true
       }
       if (chainId === state.activeEvmWallet?.chainId) {
         return true
       }
-      if (
-        !['metamask', 'sbtauth'].includes(
-          getters.activeEvmWallet?.label.toLocaleLowerCase() ?? ''
-        )
-      ) {
-        throw new Error(
-          'Not supported, please change the wallet network and reconnect again'
-        )
-      }
+
+      // if (
+      //   !['metamask', 'sbtauth'].includes(
+      //     getters.activeEvmWallet?.label.toLocaleLowerCase() ?? ''
+      //   )
+      // ) {
+      //   throw new Error(
+      //     'Not supported, please change the wallet network and reconnect again'
+      //   )
+      // }
+
       if (getters.activeEvmWallet?.label === 'sbtauth') {
         const res = await this.app.$sbtauth.provider.setChainId(chainId)
 

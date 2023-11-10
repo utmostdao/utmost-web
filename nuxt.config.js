@@ -2,7 +2,7 @@ export default {
   target: 'static',
   ssr: false,
   server: {
-    port: 4000,
+    port: 4009,
     host: '0.0.0.0',
   },
   head: {

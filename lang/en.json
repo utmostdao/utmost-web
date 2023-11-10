@@ -93,5 +93,10 @@
   "switchNetwork": "Switching the network",
   "referralRuleTitle": "Referral Code Mechanism",
   "referralRuleTip": "Register to obtain an exclusive referral link and share it to unlock additional benefits.",
-  "recipient": "Recipient"
+  "recipient": "Recipient",
+  "invalidErc20": "Invalid ERC20 address",
+  "import": "Import",
+  "txConfig": "Trading allocation",
+  "customTokens": "Custom tokens",
+  "delete": "Delete"
 }

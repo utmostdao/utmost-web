@@ -17,14 +17,9 @@
               {{ refreshInfo.time }}
             </div>
           </div>
-          <VMenu theme="dapp-menu" placement="bottom">
-            <div class="actions-item">
-              <SettingIcon :size="20" />
-            </div>
-            <template #popper>
-              <SwapSlippageSetting />
-            </template>
-          </VMenu>
+          <div class="actions-item" @click.stop="openSettings">
+            <SettingIcon :size="20" />
+          </div>
           <nuxt-link
             :to="localePath({ path: '/record', query: $route.query })"
             class="actions-item"
@@ -45,6 +40,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { $vfm } from 'vue-final-modal-types'
 export default Vue.extend({
   name: 'SwapTopBar',
   computed: {
@@ -58,6 +54,9 @@ export default Vue.extend({
   methods: {
     onRefresh() {
       this.$accessor.swap.refreshData()
+    },
+    openSettings() {
+      $vfm.show('swap-settings-dialog')
     },
   },
 })

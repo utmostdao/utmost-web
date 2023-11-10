@@ -64,7 +64,7 @@ const chainsObj = {
     name: 'Avalanche',
     network: 'AVALANCHE',
     value: 'avalanche',
-    rpc: 'https://avalanche-mainnet.infura.io',
+    rpc: 'https://rpc.ankr.com/avalanche',
     chainId: 43114,
     chainType: 'EVM',
     symbol: 'AVAX',

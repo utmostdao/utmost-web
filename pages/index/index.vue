@@ -15,9 +15,9 @@
           <div v-if="loadingMap.balance" style="margin-left: 2px">
             <SpinnerLoader :size="14" />
           </div>
-          <a v-else-if="!isOriginToken" class="balance-max" @click="onMax"
-            >MAX</a
-          >
+          <a v-else-if="!isOriginToken" class="balance-max" @click="onMax">
+            MAX
+          </a>
         </div>
       </div>
 
@@ -43,6 +43,8 @@
     </div>
 
     <SwapConfirm />
+
+    <SwapSettingsDialog />
   </div>
 </template>
 

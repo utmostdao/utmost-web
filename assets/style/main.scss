@@ -32,11 +32,11 @@ body {
   font-family: Poppins, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
   word-break: normal;
-  overflow-wrap: anywhere;
 }
 
 * {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 // 移除触摸 color
