@@ -34,7 +34,7 @@
     "@sbtauth/common": "^0.8.22",
     "@sbtauth/sbtauth-wallet": "0.8.27",
     "@web3-onboard/common": "2.1.4",
-    "@web3-onboard/injected-wallets": "2.0.12",
+    "@web3-onboard/injected-wallets": "2.10.9",
     "@web3-onboard/walletconnect": "2.4.4",
     "color": "4.2.3",
     "core-js": "3.23.3",
