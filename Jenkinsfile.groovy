@@ -65,8 +65,10 @@ pipeline {
 
     stage('部署更新服务') {
       environment {
-        K8S_MASTER_IP = credentials('jiaxing-k8s-master-ip')
-        K8S_MASTER = credentials('381816aa-abe9-4a66-8842-5f141dff42b4')
+        K8S_MASTER_IP = credentials('jiaxing-prod-k8s-master-ip')
+        K8S_MASTER = credentials('jiaxing-prod-k8s-auth')
+        // K8S_MASTER_IP = credentials('jiaxing-k8s-master-ip')
+        // K8S_MASTER = credentials('381816aa-abe9-4a66-8842-5f141dff42b4')
       }
 
       steps {
