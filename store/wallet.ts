@@ -1,7 +1,7 @@
 import {
   addWallet,
-  removeWallet,
-  disconnectWallet$,
+  // removeWallet,
+  // disconnectWallet$,
   trackWallet,
   requestAccounts,
   getChainId,
@@ -226,12 +226,13 @@ export const actions = actionTree(
     },
 
     /// Disconnect evm wallet with onboard
-    disconnect({ getters, commit }) {
+    async disconnect({ getters, commit }) {
       const label = getters.activeEvmWallet?.label
       commit('clear')
       if (label) {
-        removeWallet(label)
-        disconnectWallet$.next(label)
+        // removeWallet(label)
+        await this.app.$onboard.disconnectWallet({ label })
+        // disconnectWallet$.next(label)
       }
       if (process.client) localStorage.removeItem('connectedWallets')
     },
