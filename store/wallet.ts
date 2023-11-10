@@ -170,7 +170,6 @@ export const actions = actionTree(
       const { provider } = selectedWallet
       try {
         const [address] = await requestAccounts(provider)
-
         if (!address) {
           return
         }
@@ -213,7 +212,6 @@ export const actions = actionTree(
       })
 
       const loadedIcon = await wallet.getIcon()
-
       const selectedWallet = {
         label: wallet.label,
         icon: loadedIcon,

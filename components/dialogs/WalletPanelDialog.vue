@@ -18,7 +18,7 @@
           <div v-if="sbtauthLogined" class="connect-button-list">
             <div class="wallet-type-header">
               <div class="wallet-type">SBTAuth</div>
-              <div class="disconnect" @click="diconnectSbtauth">
+              <div class="disconnect" @click="disconnectSbtauth">
                 {{ $t('disconnect') }}
               </div>
             </div>
@@ -146,10 +146,10 @@ export default Vue.extend({
         this.icons.push(icon)
       }
     },
-    disconnectCustomeEvmWallet(): void {
+    disconnectCustomEvmWallet(): void {
       this.$accessor.wallet.disconnect()
     },
-    diconnectSbtauth() {
+    disconnectSbtauth() {
       this.$sbtauth.disconnect()
     },
     connectWallet(wallet: WalletModule) {
