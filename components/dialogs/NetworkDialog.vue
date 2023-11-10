@@ -68,9 +68,9 @@
           <!-- token list -->
           <div class="network-token-list">
             <template v-if="!loadingByToken || tokenList.length > 0">
-              <template v-if="[...customTokens, ...tokenList].length > 0">
+              <template v-if="[...tokenList].length > 0">
                 <div
-                  v-for="token in [...customTokens, ...tokenList]"
+                  v-for="token in [...tokenList]"
                   :key="token.swapTokenID"
                   class="token-item"
                   :class="{
@@ -497,7 +497,7 @@ export default Vue.extend({
           .set(res.items ?? [], this.queryTokenParams.pageNo)
         setTokens(res.items?.[0]?.swapTokenNetwork ?? '', res.items ?? [])
 
-        await this.generateCustomToken()
+        // await this.generateCustomToken()
       } catch (err) {
         if (err instanceof Error) {
           this.$message.error(err.message)
