@@ -370,6 +370,7 @@ export default Vue.extend({
             chainId: Number(this.selectChain?.chainID ?? '0'),
             contractAddress: customToken.swapTokenContractAddress,
           })
+
           const symbol = await this.$onboard.getTokenSymbol({
             chainId: Number(this.selectChain?.chainID ?? '0'),
             contractAddress: customToken.swapTokenContractAddress,
@@ -388,7 +389,7 @@ export default Vue.extend({
             this.tokenList.push(customToken as any)
           }
         } catch (err) {
-          this.$message.error(this.$t('invalidErc20').toString())
+          throw new Error(this.$t('invalidErc20').toString())
         }
       }
     },
@@ -556,19 +557,20 @@ export default Vue.extend({
 
 .search-input {
   width: 100%;
-  padding-bottom: 30px;
+  padding-right: 40px;
+  margin-bottom: 30px;
   background-color: $secondary;
   z-index: 1;
   @include flexCc;
   position: relative;
+  border: 1px solid $border;
+  border-radius: $radius;
+  background-color: $surface;
 
   .input {
     width: 100%;
     height: 42px;
-    border: 1px solid $border;
-    border-radius: $radius;
     padding: 0 10px;
-    background-color: $surface;
   }
 
   .search-icon {
