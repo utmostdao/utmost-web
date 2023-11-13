@@ -28,7 +28,7 @@ const chainsObj = {
     name: 'BSC',
     network: 'BSC',
     value: 'bsc',
-    rpc: 'https://bsc-dataseed1.binance.org/',
+    rpc: 'https://rpc.ankr.com/bsc',
     chainId: 56,
     chainType: 'EVM',
     symbol: 'BNB',
