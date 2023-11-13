@@ -171,6 +171,10 @@ export default Vue.extend({
       text-align: center;
       padding: 0 30px;
 
+      @include phone {
+        padding: 0 10px;
+      }
+
       // border-bottom: 1px solid $devider;
 
       .title {
@@ -196,7 +200,7 @@ export default Vue.extend({
       cursor: pointer;
     }
     .overlay-scrollbars {
-      max-height: calc(100vh - 60px - 89px) !important;
+      max-height: calc(100vh * 0.7) !important;
     }
     .content {
       padding: 0 30px;
@@ -205,6 +209,7 @@ export default Vue.extend({
 
       @include phone {
         height: auto;
+        padding: 0 10px;
       }
     }
     .footer {
