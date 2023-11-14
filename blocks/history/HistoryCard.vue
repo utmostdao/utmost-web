@@ -79,10 +79,10 @@
             <span>&nbsp;{{ bridgeTime }}</span>
           </div>
         </div>
-        <div v-else-if="!isSame" class="item">
+        <!-- <div v-else-if="!isSame" class="item">
           <div class="label">{{ $t('failureRes') }}:</div>
           <div class="val error">{{ infos.swapRecordErrorMsg }}</div>
-        </div>
+        </div> -->
         <div v-if="!isSame" class="item">
           <div class="label">{{ $t('dstHash') }}:</div>
           <a v-if="dstHash !== '-'" class="val" @click="onJump('to')">
