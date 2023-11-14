@@ -53,11 +53,13 @@
             {{ $helpers.shortAddress(item.swapRecordUserAddress, 3) }}
           </div>
           <div class="item token">
-            <img
+            <TokenImageCard
               v-if="item.feeTokenLogo"
               :src="$helpers.generateImgUrl(item.feeTokenLogo)"
+              :size="16"
               class="token-img"
             />
+
             <span>{{ $helpers.shortFloatNum(item.rebate, 6) }}</span>
             &nbsp;
             <span>{{ item.feeTokenSymbol }}</span>

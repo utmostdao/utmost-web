@@ -4704,7 +4704,7 @@
     "@walletconnect/window-getters" "^1.0.1"
     tslib "1.14.1"
 
-"@web3-onboard/common@2.1.4", "@web3-onboard/common@^2.0.6", "@web3-onboard/common@^2.1.4":
+"@web3-onboard/common@2.1.4", "@web3-onboard/common@^2.0.6":
   version "2.1.4"
   resolved "https://registry.npmjs.org/@web3-onboard/common/-/common-2.1.4.tgz"
   integrity sha512-+EzgwbPY0OSgw5EBjb69lUnBqTVS7M1jPNfNRF3VxqkIgl+Lv2WPgXhracSLeUh77sVeBmSn+VqlztKtjG+Dxg==
@@ -4723,13 +4723,13 @@
     ethers "5.5.4"
     joi "17.9.1"
 
-"@web3-onboard/injected-wallets@2.0.12":
-  version "2.0.12"
-  resolved "https://registry.npmjs.org/@web3-onboard/injected-wallets/-/injected-wallets-2.0.12.tgz"
-  integrity sha512-viZebgwenIKRN/1q0A6Yq0euYxGmP7sPCPwjKQoTFQPcwKuR+kPkfLw1MnPkntxpC7Cyc5dS4/LsOqeEfSPFbQ==
+"@web3-onboard/injected-wallets@2.10.9":
+  version "2.10.9"
+  resolved "https://registry.npmjs.org/@web3-onboard/injected-wallets/-/injected-wallets-2.10.9.tgz#7af271d6742993ab1de13aeeea688640263d1f5d"
+  integrity sha512-Eo2BAHOaEnhufSCiqgVYT1FeNLKKmEfAEcHcxBVeANar7th8zUBhC5QyorQNwTvsFr9MOxgJe/CELcAFQJalVA==
   dependencies:
-    "@web3-onboard/common" "^2.1.4"
-    joi "^17.4.2"
+    "@web3-onboard/common" "^2.3.3"
+    joi "17.9.1"
     lodash.uniqby "^4.7.0"
 
 "@web3-onboard/walletconnect@2.4.4":

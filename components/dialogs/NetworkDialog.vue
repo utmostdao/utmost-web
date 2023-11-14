@@ -36,10 +36,11 @@
                   }"
                   @click="onSelectNetwork(chain)"
                 >
-                  <img
+                  <TokenImageCard
                     :src="$helpers.generateImgUrl(chain.chainIcon)"
-                    class="network-icon"
+                    :size="34"
                   />
+
                   <div class="network-name">{{ chain.netWorkName }}</div>
                 </div>
               </template>
@@ -86,18 +87,19 @@
                   <div class="infos">
                     <div class="left">
                       <div class="token-box">
-                        <img
+                        <TokenImageCard
+                          :size="36"
                           :src="
                             token.swapTokenID &&
                             token.swapTokenID.endsWith('custom')
                               ? token.swapTokenIcon
                               : $helpers.generateImgUrl(token.swapTokenIcon)
                           "
-                          class="token-icon"
                         />
-                        <img
+                        <TokenImageCard
                           v-if="selectChain"
                           :src="selectChain.chainIcon"
+                          :size="18"
                           class="network-icon"
                         />
                       </div>
@@ -108,15 +110,16 @@
                         </div>
                         <div class="more-infos">
                           <div class="name">{{ token.swapTokenName }}</div>
-                          <div class="name address">
-                            {{ $helpers.shortAddress(contractAddress(token)) }}
-                            <span
-                              v-if="contractAddress(token)"
-                              @click.stop="onCopy(contractAddress(token))"
-                            >
-                              <CopyIcon :size="12" />
-                            </span>
-                          </div>
+                        </div>
+
+                        <div class="name address">
+                          {{ $helpers.shortAddress(contractAddress(token)) }}
+                          <span
+                            v-if="contractAddress(token)"
+                            @click.stop="onCopy(contractAddress(token))"
+                          >
+                            <CopyIcon :size="12" />
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -603,14 +606,10 @@ export default Vue.extend({
     @include flexRc;
     align-items: flex-start;
     justify-content: flex-start;
-    position: sticky;
-    top: 0px;
+    position: relative;
 
     .network-list {
       width: 72px;
-      position: sticky;
-      top: 0px;
-
       .network-item {
         width: 70px;
         height: 70px;
@@ -778,7 +777,7 @@ export default Vue.extend({
               height: 100%;
               margin-left: 12px;
               @include flexC;
-              justify-content: center;
+              justify-content: space-around;
               align-items: flex-start;
 
               .more-infos {
@@ -790,25 +789,30 @@ export default Vue.extend({
                   flex-direction: column;
                   align-items: flex-start;
                 }
-                .address {
-                  margin-left: 4px;
-                  margin-right: 2px;
+              }
 
-                  @include phone {
-                    margin: 0;
-                  }
+              .name {
+                // width: 100%;
+                color: $textColorOp5;
+                font-size: 12px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: 130%;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+
+              .address {
+                margin-right: 2px;
+                @include flexRc;
+
+                span {
+                  display: inline-flex;
                 }
 
-                .name {
-                  // width: 100%;
-                  color: $textColorOp5;
-                  font-size: 12px;
-                  font-style: normal;
-                  font-weight: 500;
-                  line-height: 130%;
-                  white-space: nowrap;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
+                @include phone {
+                  margin: 0;
                 }
               }
 
