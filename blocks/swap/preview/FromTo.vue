@@ -2,18 +2,20 @@
   <div class="swap-preview-from-to">
     <div class="from">
       <div class="logo">
-        <img
+        <TokenImageCard
           :src="
             $helpers.generateImgUrl(
               fromTokenInfo && fromTokenInfo.swapTokenIcon
             )
           "
+          :size="34"
           class="token-icon"
         />
-        <img
+        <TokenImageCard
           :src="
             $helpers.generateImgUrl(fromChainInfo && fromChainInfo.chainIcon)
           "
+          :size="18"
           class="network-icon"
         />
       </div>
@@ -42,14 +44,16 @@
 
     <div class="to">
       <div class="logo">
-        <img
+        <TokenImageCard
           :src="
             $helpers.generateImgUrl(toTokenInfo && toTokenInfo.swapTokenIcon)
           "
+          :size="34"
           class="token-icon"
         />
-        <img
+        <TokenImageCard
           :src="$helpers.generateImgUrl(toChainInfo && toChainInfo.chainIcon)"
+          :size="18"
           class="network-icon"
         />
       </div>

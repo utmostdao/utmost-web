@@ -13,8 +13,16 @@
         <div class="item">
           <div class="network">
             <div class="logo">
-              <img :src="srcTokenIcon" class="token-icon" />
-              <img :src="srcChainIcon" class="network-icon" />
+              <TokenImageCard
+                :src="srcTokenIcon"
+                :size="28"
+                class="token-icon"
+              />
+              <TokenImageCard
+                :src="srcChainIcon"
+                :size="14"
+                class="network-icon"
+              />
             </div>
 
             <div class="info">
@@ -34,8 +42,16 @@
         <div class="item">
           <div v-if="dstChainIcon" class="network">
             <div class="logo">
-              <img :src="dstTokenIcon" class="token-icon" />
-              <img :src="dstChainIcon" class="network-icon" />
+              <TokenImageCard
+                :src="dstTokenIcon"
+                :size="28"
+                class="token-icon"
+              />
+              <TokenImageCard
+                :src="dstChainIcon"
+                :size="14"
+                class="network-icon"
+              />
             </div>
 
             <div class="info">
