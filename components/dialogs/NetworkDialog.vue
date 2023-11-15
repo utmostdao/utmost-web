@@ -155,8 +155,11 @@
                     </div>
                   </div>
                 </div>
-                <div v-if="loadingByToken" class="token-list-footer">
+                <div class="token-list-footer">
                   <SpinnerLoader v-if="loadingByToken" :size="18" />
+                  <div v-else-if="noMore" class="no-more">
+                    {{ $t('noMore') }}
+                  </div>
                 </div>
               </template>
               <template v-else>
@@ -212,6 +215,7 @@ export default Vue.extend({
         pageSize: 10,
         tokenType: '0',
       },
+      totalPage: -1, // -1 为无穷大
       modelParams: undefined as undefined | ModelParams,
       chainList: [] as SwapChainDetails,
       tokenList: [] as SwapTokens['items'],
@@ -222,6 +226,11 @@ export default Vue.extend({
     }
   },
   computed: {
+    noMore() {
+      return (
+        this.totalPage !== -1 && this.totalPage <= this.queryTokenParams.pageNo
+      )
+    },
     selectedChains(): ModelParams['selectedChains'] {
       return this.modelParams?.selectedChains
     },
@@ -314,7 +323,7 @@ export default Vue.extend({
       }
     },
     async onScroll(pos: number) {
-      if (pos < 100 && !this.loadingByToken) {
+      if (pos < 100 && !this.noMore && !this.loadingByToken) {
         this.queryTokenParams.pageNo += 1
         await this.getTokens()
       }
@@ -494,6 +503,8 @@ export default Vue.extend({
           userAddress:
             this.$accessor.wallet.activeEvmWallet?.accounts[0].address,
         })
+
+        this.totalPage = Number(res.totalPage)
 
         // 更新本地缓存数据
         this.$helpers
@@ -846,6 +857,12 @@ export default Vue.extend({
         height: 30px;
         width: 100%;
         @include flexCc;
+
+        .no-more {
+          font-size: 12px;
+          font-weight: 500;
+          color: $textColorOp5;
+        }
       }
     }
   }
