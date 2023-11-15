@@ -226,7 +226,7 @@ export default Vue.extend({
     }
   },
   computed: {
-    noMore() {
+    noMore(): boolean {
       return (
         this.totalPage !== -1 && this.totalPage <= this.queryTokenParams.pageNo
       )
