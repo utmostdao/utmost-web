@@ -13,8 +13,16 @@
         <div class="item">
           <div class="network">
             <div class="logo">
-              <img :src="srcTokenIcon" class="token-icon" />
-              <img :src="srcChainIcon" class="network-icon" />
+              <TokenImageCard
+                :src="srcTokenIcon"
+                :size="28"
+                class="token-icon"
+              />
+              <TokenImageCard
+                :src="srcChainIcon"
+                :size="14"
+                class="network-icon"
+              />
             </div>
 
             <div class="info">
@@ -34,8 +42,16 @@
         <div class="item">
           <div v-if="dstChainIcon" class="network">
             <div class="logo">
-              <img :src="dstTokenIcon" class="token-icon" />
-              <img :src="dstChainIcon" class="network-icon" />
+              <TokenImageCard
+                :src="dstTokenIcon"
+                :size="28"
+                class="token-icon"
+              />
+              <TokenImageCard
+                :src="dstChainIcon"
+                :size="14"
+                class="network-icon"
+              />
             </div>
 
             <div class="info">
@@ -70,19 +86,16 @@
             <JumpIcon :size="12" class="jump-icon" />
           </a>
         </div>
-        <div
-          v-if="infos.swapRecordTxStatus !== 'ERROR' && !isSame"
-          class="item"
-        >
+        <div v-if="!isSame" class="item">
           <div class="label">{{ $t('bridgeTime') }}:</div>
           <div class="val">
             <span>&nbsp;{{ bridgeTime }}</span>
           </div>
         </div>
-        <div v-else-if="!isSame" class="item">
+        <!-- <div v-else-if="!isSame" class="item">
           <div class="label">{{ $t('failureRes') }}:</div>
           <div class="val error">{{ infos.swapRecordErrorMsg }}</div>
-        </div>
+        </div> -->
         <div v-if="!isSame" class="item">
           <div class="label">{{ $t('dstHash') }}:</div>
           <a v-if="dstHash !== '-'" class="val" @click="onJump('to')">

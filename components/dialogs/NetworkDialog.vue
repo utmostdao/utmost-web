@@ -36,10 +36,11 @@
                   }"
                   @click="onSelectNetwork(chain)"
                 >
-                  <img
+                  <TokenImageCard
                     :src="$helpers.generateImgUrl(chain.chainIcon)"
-                    class="network-icon"
+                    :size="34"
                   />
+
                   <div class="network-name">{{ chain.netWorkName }}</div>
                 </div>
               </template>
@@ -86,18 +87,19 @@
                   <div class="infos">
                     <div class="left">
                       <div class="token-box">
-                        <img
+                        <TokenImageCard
+                          :size="36"
                           :src="
                             token.swapTokenID &&
                             token.swapTokenID.endsWith('custom')
                               ? token.swapTokenIcon
                               : $helpers.generateImgUrl(token.swapTokenIcon)
                           "
-                          class="token-icon"
                         />
-                        <img
+                        <TokenImageCard
                           v-if="selectChain"
                           :src="selectChain.chainIcon"
+                          :size="18"
                           class="network-icon"
                         />
                       </div>
@@ -108,15 +110,16 @@
                         </div>
                         <div class="more-infos">
                           <div class="name">{{ token.swapTokenName }}</div>
-                          <div class="name address">
-                            {{ $helpers.shortAddress(contractAddress(token)) }}
-                            <span
-                              v-if="contractAddress(token)"
-                              @click.stop="onCopy(contractAddress(token))"
-                            >
-                              <CopyIcon :size="12" />
-                            </span>
-                          </div>
+                        </div>
+
+                        <div class="name address">
+                          {{ $helpers.shortAddress(contractAddress(token)) }}
+                          <span
+                            v-if="contractAddress(token)"
+                            @click.stop="onCopy(contractAddress(token))"
+                          >
+                            <CopyIcon :size="12" />
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -152,8 +155,11 @@
                     </div>
                   </div>
                 </div>
-                <div v-if="loadingByToken" class="token-list-footer">
+                <div class="token-list-footer">
                   <SpinnerLoader v-if="loadingByToken" :size="18" />
+                  <div v-else-if="noMore" class="no-more">
+                    {{ $t('noMore') }}
+                  </div>
                 </div>
               </template>
               <template v-else>
@@ -209,6 +215,7 @@ export default Vue.extend({
         pageSize: 10,
         tokenType: '0',
       },
+      totalPage: -1, // -1 为无穷大
       modelParams: undefined as undefined | ModelParams,
       chainList: [] as SwapChainDetails,
       tokenList: [] as SwapTokens['items'],
@@ -219,6 +226,11 @@ export default Vue.extend({
     }
   },
   computed: {
+    noMore(): boolean {
+      return (
+        this.totalPage !== -1 && this.totalPage <= this.queryTokenParams.pageNo
+      )
+    },
     selectedChains(): ModelParams['selectedChains'] {
       return this.modelParams?.selectedChains
     },
@@ -311,7 +323,7 @@ export default Vue.extend({
       }
     },
     async onScroll(pos: number) {
-      if (pos < 100 && !this.loadingByToken) {
+      if (pos < 100 && !this.noMore && !this.loadingByToken) {
         this.queryTokenParams.pageNo += 1
         await this.getTokens()
       }
@@ -492,6 +504,8 @@ export default Vue.extend({
             this.$accessor.wallet.activeEvmWallet?.accounts[0].address,
         })
 
+        this.totalPage = Number(res.totalPage)
+
         // 更新本地缓存数据
         this.$helpers
           .tokenCaches(Number(this.selectChain?.chainID))
@@ -603,14 +617,10 @@ export default Vue.extend({
     @include flexRc;
     align-items: flex-start;
     justify-content: flex-start;
-    position: sticky;
-    top: 0px;
+    position: relative;
 
     .network-list {
       width: 72px;
-      position: sticky;
-      top: 0px;
-
       .network-item {
         width: 70px;
         height: 70px;
@@ -778,7 +788,7 @@ export default Vue.extend({
               height: 100%;
               margin-left: 12px;
               @include flexC;
-              justify-content: center;
+              justify-content: space-around;
               align-items: flex-start;
 
               .more-infos {
@@ -790,25 +800,30 @@ export default Vue.extend({
                   flex-direction: column;
                   align-items: flex-start;
                 }
-                .address {
-                  margin-left: 4px;
-                  margin-right: 2px;
+              }
 
-                  @include phone {
-                    margin: 0;
-                  }
+              .name {
+                // width: 100%;
+                color: $textColorOp5;
+                font-size: 12px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: 130%;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+
+              .address {
+                margin-right: 2px;
+                @include flexRc;
+
+                span {
+                  display: inline-flex;
                 }
 
-                .name {
-                  // width: 100%;
-                  color: $textColorOp5;
-                  font-size: 12px;
-                  font-style: normal;
-                  font-weight: 500;
-                  line-height: 130%;
-                  white-space: nowrap;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
+                @include phone {
+                  margin: 0;
                 }
               }
 
@@ -842,6 +857,12 @@ export default Vue.extend({
         height: 30px;
         width: 100%;
         @include flexCc;
+
+        .no-more {
+          font-size: 12px;
+          font-weight: 500;
+          color: $textColorOp5;
+        }
       }
     }
   }

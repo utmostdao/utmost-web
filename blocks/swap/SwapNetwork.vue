@@ -21,12 +21,13 @@
     <div class="right-network" @click.stop="openNetworkDialog">
       <div v-if="chainInfo && tokenInfo" class="network-info">
         <div class="logo">
-          <img
+          <TokenImageCard
             :src="$helpers.generateImgUrl(tokenInfo && tokenInfo.swapTokenIcon)"
-            class="token-icon"
+            :size="34"
           />
-          <img
+          <TokenImageCard
             :src="$helpers.generateImgUrl(chainInfo && chainInfo.chainIcon)"
+            :size="18"
             class="network-icon"
           />
         </div>

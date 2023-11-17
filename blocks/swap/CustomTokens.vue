@@ -7,15 +7,18 @@
           <div class="infos">
             <div class="left">
               <div class="token-box">
-                <img
+                <TokenImageCard
                   :src="
                     token.swapTokenID && token.swapTokenID.endsWith('custom')
                       ? token.swapTokenIcon
                       : $helpers.generateImgUrl(token.swapTokenIcon)
                   "
-                  class="token-icon"
+                  :size="36"
                 />
-                <img :src="chainIcon(chainId)" class="network-icon" />
+                <TokenImageCard
+                  :src="chainIcon(chainId)"
+                  class="network-icon"
+                />
               </div>
 
               <div class="info">
