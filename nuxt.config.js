@@ -103,7 +103,7 @@ export default {
   },
 
   loadingIndicator: {
-    name: 'circle',
+    name: 'chasing-dots',
     color: 'rgba(123, 87, 224, 1)',
     background: 'rgba(241, 243, 244, 1)',
   },
