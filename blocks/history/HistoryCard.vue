@@ -86,10 +86,7 @@
             <JumpIcon :size="12" class="jump-icon" />
           </a>
         </div>
-        <div
-          v-if="infos.swapRecordTxStatus !== 'ERROR' && !isSame"
-          class="item"
-        >
+        <div v-if="!isSame" class="item">
           <div class="label">{{ $t('bridgeTime') }}:</div>
           <div class="val">
             <span>&nbsp;{{ bridgeTime }}</span>
