@@ -355,7 +355,7 @@ export const actions = actionTree(
     },
     async getReferralInfo({ getters }): Promise<string[] | null> {
       const provider = new ethers.providers.JsonRpcProvider(
-        'https://rpc.abmatrix.cn/json-rpc/http/polygon'
+        'https://rpc.ankr.com/polygon'
       )
       const userAddress = getters.activeEvmWallet?.accounts[0].address
       if (!userAddress) return null
