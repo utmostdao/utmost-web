@@ -83,7 +83,8 @@ export function tokenCaches(chainID: number): {
 export function generateImgUrl(url?: string): string {
   if (!url) return ''
   if (!url.startsWith('http')) return url
-  return 'https://oversea-proxy.safematrix.io/' + url
+  // return 'https://oversea-proxy.safematrix.io/' + url
+  return url
 }
 
 export function shortFloatNum(i: number | string, position: number): string {
