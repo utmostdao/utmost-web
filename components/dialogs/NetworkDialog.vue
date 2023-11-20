@@ -113,7 +113,7 @@
                         </div>
 
                         <div class="name address">
-                          {{ $helpers.shortAddress(contractAddress(token)) }}
+                          {{ $helpers.shortAddress(contractAddress(token), 6) }}
                           <span
                             v-if="contractAddress(token)"
                             @click.stop="onCopy(contractAddress(token))"
@@ -712,7 +712,7 @@ export default Vue.extend({
         overflow: hidden;
         position: relative;
         padding: 4px 16px;
-        margin-bottom: 20px;
+        margin-bottom: 12px;
         cursor: pointer;
         @include flexCc;
 
@@ -788,7 +788,7 @@ export default Vue.extend({
               height: 100%;
               margin-left: 12px;
               @include flexC;
-              justify-content: space-around;
+              justify-content: center;
               align-items: flex-start;
 
               .more-infos {

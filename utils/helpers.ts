@@ -152,7 +152,7 @@ export function toHexString(value: number | undefined | string) {
 export function shortAddress(address: string, num?: number) {
   if (!address) return ''
   return (
-    address.substring(0, (num ?? 4) + 2) +
+    address.substring(0, num ?? 4) +
     '...' +
     address.substring(address.length - (num ?? 4))
   )
