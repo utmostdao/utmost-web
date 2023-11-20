@@ -182,15 +182,15 @@ export default Vue.extend({
         object-fit: contain;
         overflow: hidden;
 
-        &::before {
-          content: '';
-          background-color: $surface;
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-        }
+        // &::before {
+        //   content: '';
+        //   background-color: $surface;
+        //   position: absolute;
+        //   top: 0;
+        //   left: 0;
+        //   width: 100%;
+        //   height: 100%;
+        // }
       }
     }
 
