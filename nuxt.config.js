@@ -150,7 +150,7 @@ export default {
   workbox: {
     runtimeCaching: [
       {
-        urlPattern: `https://oversea-proxy.safematrix.io/*`,
+        // urlPattern: `https://oversea-proxy.safematrix.io/*`,
         handler: 'CacheFirst',
         strategyOptions: {
           cacheName: 'bee-cache',
