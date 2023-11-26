@@ -373,7 +373,8 @@ export default Vue.extend({
           const balance = await this.$onboard.getBalance({
             chainId: Number(this.selectChain!.chainID!),
             contractAddress: item.swapTokenContractAddress!,
-            userAddress: '0xc8F6fa416D7ae76394F96c0EACf89F2b563c46B5',
+            userAddress:
+              this.$accessor.wallet.activeEvmWallet!.accounts[0]!.address!,
             decimals: Number(item.swapTokenDecimals!),
           })
           balanceMap[item.swapTokenContractAddress!] = balance
