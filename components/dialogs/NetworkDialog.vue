@@ -139,14 +139,23 @@
                             token.swapTokenID.endsWith('custom')
                           "
                         >
-                          {{
-                            tokenBalance && token.swapTokenContractAddress
-                              ? $helpers.shortFloatNum(
-                                  tokenBalance[token.swapTokenContractAddress],
-                                  6
-                                )
-                              : '0'
-                          }}
+                          <template
+                            v-if="loadingByBalance && token.balance === '0'"
+                          >
+                            <SpinnerLoader :size="14" />
+                          </template>
+                          <template v-else>
+                            {{
+                              tokenBalance && token.swapTokenContractAddress
+                                ? $helpers.shortFloatNum(
+                                    tokenBalance[
+                                      token.swapTokenContractAddress
+                                    ],
+                                    6
+                                  )
+                                : '0'
+                            }}
+                          </template>
                         </template>
                         <template v-else>
                           {{ $helpers.shortFloatNum(token.balance || '0', 6) }}
@@ -209,6 +218,7 @@ export default Vue.extend({
     return {
       loadingByChian: false,
       loadingByToken: false,
+      loadingByBalance: false,
       searchToken: undefined as undefined | string,
       queryTokenParams: {
         pageNo: 1,
@@ -280,6 +290,24 @@ export default Vue.extend({
       },
     },
   },
+
+  mounted() {
+    /// fix custom token of zbc decimals in cache default is 18 changed 9
+
+    const customTokens = this.$helpers.customTokens('56').get()
+    let zbcToken = customTokens.find(
+      (item) =>
+        item.swapTokenContractAddress?.toLowerCase() ===
+        '0x37a56cdcD83Dce2868f721De58cB3830C44C6303'.toLowerCase()
+    )
+
+    if (zbcToken && zbcToken.swapTokenDecimals !== '9') {
+      zbcToken = { ...zbcToken }
+      zbcToken.swapTokenDecimals = '9'
+      this.$helpers.customTokens('56').delete(zbcToken)
+      this.$helpers.customTokens('56').set(zbcToken)
+    }
+  },
   methods: {
     beforeOpen(res) {
       this.modelParams = res.ref.params
@@ -306,6 +334,13 @@ export default Vue.extend({
         this.getTokens()
       }
     },
+    isCustomToken(token: SwapTokens['items'][0]) {
+      return !!this.customTokens.find(
+        (item) =>
+          item.swapTokenContractAddress?.toLowerCase() ===
+          token.swapTokenContractAddress?.toString()
+      )
+    },
     isShowImportBtn(token: SwapTokens['items'][0]) {
       return (
         token.swapTokenID?.endsWith('custom') &&
@@ -331,13 +366,14 @@ export default Vue.extend({
     async getTokenBalance() {
       const tokens = this.customTokens
       const balanceMap = {}
+      this.loadingByBalance = true
+
       for (const item of tokens) {
         try {
           const balance = await this.$onboard.getBalance({
             chainId: Number(this.selectChain!.chainID!),
             contractAddress: item.swapTokenContractAddress!,
-            userAddress:
-              this.$accessor.wallet.activeEvmWallet!.accounts[0]!.address!,
+            userAddress: '0xc8F6fa416D7ae76394F96c0EACf89F2b563c46B5',
             decimals: Number(item.swapTokenDecimals!),
           })
           balanceMap[item.swapTokenContractAddress!] = balance
@@ -345,7 +381,7 @@ export default Vue.extend({
           balanceMap[item.swapTokenContractAddress!] = '0'
         }
       }
-
+      this.loadingByBalance = false
       this.tokenBalance = balanceMap
     },
     async generateCustomToken() {
@@ -387,10 +423,15 @@ export default Vue.extend({
             chainId: Number(this.selectChain?.chainID ?? '0'),
             contractAddress: customToken.swapTokenContractAddress,
           })
+          const decimals = await this.$onboard.getTokenDecimals({
+            chainId: Number(this.selectChain?.chainID ?? '0'),
+            contractAddress: customToken.swapTokenContractAddress,
+          })
 
           customToken.swapTokenSymbol = symbol
           customToken.swapThirdPartySymbol = symbol
           customToken.swapTokenName = name
+          customToken.swapTokenDecimals = Number(decimals)
 
           if (
             ![...this.customTokens, ...this.tokenList].find(
