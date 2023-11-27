@@ -1,8 +1,4 @@
 .light-mode {
-  --sbtauth-background: #fff;
-  --sbtauth-onbackground: #000;
-  --sbtauth-priamry: rgba(123, 87, 224, 1);
-
   --background: rgba(241, 243, 244, 1);
   --secondary: rgba(255, 255, 255, 1);
   --surface: rgba(246, 248, 249, 1);
@@ -15,10 +11,6 @@
 }
 
 .dark-mode {
-  --sbtauth-background: #fff;
-  --sbtauth-onbackground: #000;
-  --sbtauth-priamry: rgba(123, 87, 224, 1);
-
   --background: rgb(241, 243, 244);
   --secondary: rgba(255, 255, 255, 1);
   --surface: rgba(246, 248, 249, 1);

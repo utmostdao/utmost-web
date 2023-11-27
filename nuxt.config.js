@@ -34,7 +34,6 @@ export default {
     '~/plugins/axios.ts',
     '~/plugins/helpers.ts',
     '~/plugins/wallet/index.ts',
-    `~/plugins/sbtauth.ts`,
     '~/plugins/api/index.ts',
     '~/plugins/confirm-dialog.ts',
     '~/plugins/floating-vue.ts',

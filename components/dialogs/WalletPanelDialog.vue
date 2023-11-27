@@ -2,34 +2,6 @@
   <basic-dialog name="wallet-panel-dialog" :fullscreen="true">
     <template #content="{}">
       <div class="wallet-panel">
-        <!-- <div class="top-tab-bar">
-          <tab-bar
-            :tabs="tabs"
-            :active-tab="activeTab"
-            @select="selectTab"
-          ></tab-bar>
-        </div>
-        <div v-show="activeTab === 'sbtauth'" style="width: 100%">
-          <div
-            v-show="!sbtauthLogined"
-            id="sbtauth-login"
-            ref="sbtauth-login"
-          ></div>
-          <div v-if="sbtauthLogined" class="connect-button-list">
-            <div class="wallet-type-header">
-              <div class="wallet-type">SBTAuth</div>
-              <div class="disconnect" @click="disconnectSbtauth">
-                {{ $t('disconnect') }}
-              </div>
-            </div>
-            <wallet-card
-              v-for="wallet in sbtauthWallets"
-              :key="wallet.chain"
-              :connect-wallet="wallet"
-              @click.native="$accessor.wallet.setActiveWallet(wallet)"
-            ></wallet-card>
-          </div>
-        </div> -->
         <div v-show="activeTab === 'custom'" class="connect-button-list">
           <div class="wallet-type-header">
             <div class="wallet-type">EVM</div>
@@ -73,7 +45,7 @@
 import type { WalletModule } from '@web3-onboard/common'
 import Vue from 'vue'
 import { $vfm } from 'vue-final-modal-types'
-import { ConnectedWallet } from '~/store/wallet'
+
 export default Vue.extend({
   name: 'WalletPanelDialog',
   data() {
@@ -86,46 +58,19 @@ export default Vue.extend({
     }
   },
   computed: {
-    tabs() {
-      return [
-        {
-          key: 'custom',
-          name: this.$t('customWallet'),
-        },
-        {
-          key: 'sbtauth',
-          name: this.$t('socialWallet'),
-        },
-      ]
-    },
     customEvmWallet() {
-      return this.$accessor.wallet.evmWallets.find((w) => w.label !== 'sbtauth')
+      return this.$accessor.wallet.evmWallets[0]
     },
     activeEvmWallet() {
       return this.$accessor.wallet.activeEvmWallet
     },
-    sbtauthLogined() {
-      return this.$accessor.wallet.evmWallets.some((w) => w.label === 'sbtauth')
-    },
     customEvmActive() {
       const label = this.$accessor.wallet.activeEvmWallet?.label
-      return label && label !== 'sbtauth'
-    },
-    sbtauthWallets(): ConnectedWallet[] {
-      return this.$accessor.wallet.sbtauthWallets
+      return label
     },
   },
   mounted() {
     this.getIcons()
-    this.$nextTick(() => {
-      const loginWidget = this.$sbtauth.provider?.loginWidget()
-      if (loginWidget) {
-        const element = document.querySelector('#sbtauth-login')
-        loginWidget.setAttribute('locale', this.$i18n.locale)
-        if (element) element.textContent = ''
-        document.querySelector('#sbtauth-login')?.append(loginWidget)
-      }
-    })
   },
   methods: {
     changeNetwork(chainID: string) {
@@ -148,9 +93,6 @@ export default Vue.extend({
     },
     disconnectCustomEvmWallet(): void {
       this.$accessor.wallet.disconnect()
-    },
-    disconnectSbtauth() {
-      this.$sbtauth.disconnect()
     },
     connectWallet(wallet: WalletModule) {
       try {
@@ -178,15 +120,6 @@ export default Vue.extend({
 
   .top-tab-bar {
     width: 200px;
-  }
-
-  #sbtauth-login {
-    // height: 400px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
   }
 
   .connect-button-list {
