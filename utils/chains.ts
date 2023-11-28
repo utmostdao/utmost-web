@@ -69,7 +69,7 @@ const chainsObj = {
     chainType: 'EVM',
     symbol: 'AVAX',
     supportContract: true,
-    scanUrl: 'https://snowtrace.io/',
+    scanUrl: 'https://subnets.avax.network/c-chain',
     bridgetime: 2,
   },
   zksync: {
