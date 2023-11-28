@@ -134,7 +134,7 @@ export default {
   },
 
   build: {
-    analyze: true,
+    // analyze: true,
     transpile: [
       /^element-ui/,
       '@solana/wallet-adapter-base',
