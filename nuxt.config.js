@@ -134,6 +134,7 @@ export default {
   },
 
   build: {
+    analyze: true,
     transpile: [
       /^element-ui/,
       '@solana/wallet-adapter-base',
@@ -144,12 +145,29 @@ export default {
       '@walletconnect/modal-core',
       '@walletconnect/universal-provider',
       '@walletconnect/sign-client',
+      'web3-onboard-core',
     ],
   },
   workbox: {
     runtimeCaching: [
       {
         urlPattern: `https://oversea-proxy.safematrix.io/*`,
+        handler: 'CacheFirst',
+        strategyOptions: {
+          cacheName: 'bee-cache',
+        },
+        strategyPlugins: [
+          {
+            use: 'Expiration',
+            config: {
+              maxEntries: 100,
+              maxAgeSeconds: 60 * 60 * 24 * 7,
+            },
+          },
+        ],
+      },
+      {
+        urlPattern: `https://oss.utmost.finance/abm/token-logo/*`,
         handler: 'CacheFirst',
         strategyOptions: {
           cacheName: 'bee-cache',
