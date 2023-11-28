@@ -134,7 +134,7 @@ export default {
   },
 
   build: {
-    // analyze: true,
+    analyze: true,
     transpile: [
       /^element-ui/,
       '@solana/wallet-adapter-base',
@@ -151,10 +151,10 @@ export default {
   workbox: {
     runtimeCaching: [
       {
-        urlPattern: `https://oversea-proxy.safematrix.io/*`,
+        urlPattern: `https://oversea-proxy.safematrix.io/https://tokens.1inch.io/*`,
         handler: 'CacheFirst',
         strategyOptions: {
-          cacheName: 'bee-cache',
+          cacheName: 'token-cache',
         },
         strategyPlugins: [
           {
@@ -170,7 +170,7 @@ export default {
         urlPattern: `https://oss.utmost.finance/abm/token-logo/*`,
         handler: 'CacheFirst',
         strategyOptions: {
-          cacheName: 'bee-cache',
+          cacheName: 'chain-cache',
         },
         strategyPlugins: [
           {
