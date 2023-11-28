@@ -151,8 +151,7 @@ export default {
   workbox: {
     runtimeCaching: [
       {
-        urlPattern: `https://oversea-proxy.safematrix.io/https://tokens.1inch.io/*`,
-        handler: 'CacheFirst',
+        urlPattern: `https://oversea-proxy.safematrix.io/https://tokens.1inch.io/.*`,
         strategyOptions: {
           cacheName: 'token-cache',
         },
@@ -167,8 +166,7 @@ export default {
         ],
       },
       {
-        urlPattern: `https://oss.utmost.finance/abm/token-logo/*`,
-        handler: 'CacheFirst',
+        urlPattern: `https://oss.utmost.finance/abm/token-logo/.*`,
         strategyOptions: {
           cacheName: 'chain-cache',
         },
