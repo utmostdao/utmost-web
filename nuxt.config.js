@@ -30,6 +30,7 @@ export default {
   },
 
   plugins: [
+    '~/plugins/update.js',
     '~/plugins/element-ui.js',
     '~/plugins/axios.ts',
     '~/plugins/helpers.ts',
@@ -90,7 +91,12 @@ export default {
     '@nuxtjs/i18n',
     'nuxt-breakpoints',
     'nuxt-breakpoints-ssr',
+    '~/modules/update',
   ],
+
+  update: {
+    check_interval: 60 * 1000, // 60 seconds
+  },
 
   axios: {
     baseURL: process.env.APP_BASE_URL,
@@ -161,6 +167,7 @@ export default {
             config: {
               maxEntries: 100,
               maxAgeSeconds: 60 * 60 * 24 * 7,
+              purgeOnQuotaError: true,
             },
           },
         ],
@@ -174,8 +181,9 @@ export default {
           {
             use: 'Expiration',
             config: {
-              maxEntries: 100,
+              maxEntries: 10,
               maxAgeSeconds: 60 * 60 * 24 * 7,
+              purgeOnQuotaError: true,
             },
           },
         ],
