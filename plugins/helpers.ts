@@ -111,10 +111,16 @@ const helpersPlugin: Plugin = ({ i18n }, inject) => {
       throw new Error('chain not found')
     }
 
+    const urlObj = new URL(scanUrl.url)
+
+    const urlHref = urlObj.origin + urlObj.pathname
+    const url = urlHref.endsWith('/') ? urlHref : urlHref + '/'
+    const search = urlObj.search
+
     if ([160313568, 1918346523].includes(chainId)) {
-      window.open(`${scanUrl!.url}txblock/${tx}`)
+      window.open(`${url}txblock/${tx}`)
     } else {
-      window.open(`${scanUrl!.url}tx/${tx}`)
+      window.open(`${url}tx/${tx}${search}`)
     }
   }
 
