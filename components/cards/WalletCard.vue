@@ -2,8 +2,7 @@
   <div class="wallet-card">
     <div class="status" :class="{ active: active }"></div>
     <template v-if="wallet.icon">
-      <img v-if="wallet.label === 'sbtauth'" class="icon" :src="iconUrl" />
-      <div v-else class="icon" v-html="wallet.icon"></div>
+      <div class="icon" v-html="wallet.icon"></div>
     </template>
     <div class="info">
       <div class="name">{{ wallet.label }}</div>

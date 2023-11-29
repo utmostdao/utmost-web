@@ -55,12 +55,6 @@ export const getters = getterTree(state, {
   activeBitcoinWallet: (state) => state.activeBitcoinWallet,
   bitcoinWallet: (state) => state.bitcoinWallets,
   onboardStatus: (state) => state.onboardStatus,
-  sbtauthWallets: (state) => {
-    const wallets = [...state.evmWallets, ...state.bitcoinWallets].filter(
-      (w) => w.label === 'sbtauth'
-    )
-    return wallets ?? []
-  },
   chainId: (state) => state.activeEvmWallet?.provider?.chainId,
 })
 
@@ -236,7 +230,7 @@ export const actions = actionTree(
     },
 
     async changeNetwork(
-      { getters, state, commit },
+      { state },
       chainId: string
     ): Promise<boolean | undefined> {
       if (document.hidden) {
@@ -245,29 +239,11 @@ export const actions = actionTree(
       if (chainId === state.activeEvmWallet?.chainId) {
         return true
       }
-
-      // if (
-      //   !['metamask', 'sbtauth'].includes(
-      //     getters.activeEvmWallet?.label.toLocaleLowerCase() ?? ''
-      //   )
-      // ) {
-      //   throw new Error(
-      //     'Not supported, please change the wallet network and reconnect again'
-      //   )
-      // }
-
-      if (getters.activeEvmWallet?.label === 'sbtauth') {
-        const res = await this.app.$sbtauth.provider.setChainId(chainId)
-
-        commit('setActiveWallet', state.activeEvmWallet)
-        return res
-      } else {
-        const res = await this.app.$onboard.setChain({ chainId })
-        if (!res) {
-          throw new Error(this.$i18n.t('changeNetworkErr').toString())
-        }
-        return res
+      const res = await this.app.$onboard.setChain({ chainId })
+      if (!res) {
+        throw new Error(this.$i18n.t('changeNetworkErr').toString())
       }
+      return res
     },
 
     async getNetwork() {

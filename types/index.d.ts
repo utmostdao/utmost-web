@@ -1,4 +1,3 @@
-import { SbtAuthWallet } from '@sbtauth/sbtauth-wallet'
 import { $vfm } from 'vue-final-modal-types'
 import type { ConfirmInject } from './common'
 import { accessorType } from '~/store'
@@ -14,7 +13,6 @@ declare module 'vue/types/vue' {
     $confirmDialog: ConfirmInject
     $helpers: HelpersType
     $api: ApiInject
-    $sbtauth: SbtAuthWallet
   }
 }
 
@@ -24,7 +22,6 @@ declare module '@nuxt/types' {
     $confirmDialog: ConfirmInject
     $helpers: HelpersType
     $api: ApiInject
-    $abtauth: SbtAuthWallet
     $accessor: typeof accessorType
   }
 
@@ -34,6 +31,5 @@ declare module '@nuxt/types' {
     $confirmDialog: ConfirmInject
     $helpers: HelpersType
     $api: ApiInject
-    $abtauth: SbtAuthWallet
   }
 }
