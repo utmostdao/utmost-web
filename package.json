@@ -56,7 +56,6 @@
     "web3-onboard-core": "2.3.3"
   },
   "devDependencies": {
-    "webpack": "4.46.0",
     "@babel/eslint-parser": "7.18.2",
     "@commitlint/cli": "15.0.0",
     "@commitlint/config-conventional": "15.0.0",
@@ -98,7 +97,8 @@
     "stylelint-config-standard": "24.0.0",
     "ts-jest": "27.1.5",
     "ts-morph": "15.1.0",
-    "vue-jest": "3.0.7"
+    "vue-jest": "3.0.7",
+    "webpack": "4.46.0"
   },
   "browserslist": {
     "production": [
