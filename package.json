@@ -59,7 +59,6 @@
     "@babel/eslint-parser": "7.18.2",
     "@commitlint/cli": "15.0.0",
     "@commitlint/config-conventional": "15.0.0",
-    "@nuxt/devtools": "^1.0.4",
     "@nuxt/image": "^0.7.1",
     "@nuxt/types": "2.15.8",
     "@nuxt/typescript-build": "2.1.0",
