@@ -593,7 +593,9 @@ export const actions = actionTree(
       }
 
       try {
-        await this.app.$accessor.wallet.estimateGas(tx)
+        const gasLimit = await this.app.$accessor.wallet.estimateGas(tx)
+        // @ts-ignore
+        tx.gasLimit = gasLimit.mul(2)
         const res = await this.app.$accessor.wallet.sendTransaction(tx)
         const waitRes = await res.wait()
 
